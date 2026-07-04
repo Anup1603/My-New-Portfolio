@@ -1,45 +1,110 @@
 ---
-title: "Your Post Title Here"
-slug: "your-post-slug-here"
-date: "2026-07-04"
-category: "Engineering"
-excerpt: "One or two sentences shown on the blog cards and in search results / social previews."
-coverImage: "/images/blog/your-post-slug-here/cover.jpg"
-readingTime: "5 min read"
-sources:
-  - title: "Name of the article, doc, or paper you referenced"
+# ─── FRONTMATTER: fill every field. All required except `sources`. ───
+# Golden rules: this file's name MUST equal `slug` below (file = <slug>.mdx).
+# `category` MUST be one of the allowed values. Cover image is 1200x630.
+title: "Your Post Title — clear, specific, not clickbait"
+slug: "your-post-slug"                       # lowercase-hyphens; MUST match the filename (<slug>.mdx)
+date: "2026-07-04"                           # YYYY-MM-DD; newest post is featured + sorted first
+category: "Engineering"                      # EXACTLY one of: Tech News | Startups | Engineering | Data Visualization
+excerpt: "One or two plain sentences summarising the post — shown on cards, search, and social previews."
+coverImage: "/images/blog/your-post-slug/cover.jpg"  # 1200x630; local file preferred (remote hosts must be added to next.config.ts)
+readingTime: "5 min read"                    # a rough estimate is fine
+sources:                                     # OPTIONAL — delete this whole block if the post cites nothing
+  - title: "Source name (article, doc, dataset, or paper)"
     url: "https://example.com/the-source"
-  - title: "Another source (delete this list entirely if you have none)"
-    url: "https://example.com/another-source"
 ---
 
-Your opening paragraph. Hook the reader — why does this topic matter?
+{/*
+  ═══════════════════════════════════════════════════════════════════════════
+  HOW TO WRITE THIS POST  —  read this, then DELETE this whole block and
+  replace the EXAMPLE BODY below with your article.
+  ═══════════════════════════════════════════════════════════════════════════
 
-## A Section Heading (shows up in the table of contents)
+  HARD RULES (breaking any of these produces a broken or ugly post):
+  1. Markdown only. Do NOT paste raw HTML tags or inline "style=" attributes.
+     Custom HTML written by hand loses its styling here — use the blocks listed
+     under BUILDING BLOCKS instead.
+  2. The filename must equal the `slug` in the frontmatter (this file is
+     named <slug>.mdx). A mismatch makes the post 404 when clicked.
+  3. `category` must be spelled EXACTLY as one of the four allowed values
+     shown in the frontmatter comment above. Do not invent new categories.
+  4. Store this post's images in:  public/images/blog/<slug>/
+     Always write meaningful alt text for every image.
+  5. Cite your facts. Every statistic, quote, or specific claim should map to
+     an entry in `sources`. If you state a number, say where it came from.
+  6. Build the article from ## and ### headings — they auto-generate the
+     table of contents. Begin sections at ## (the H1 title comes from
+     frontmatter; do not add a "# " heading in the body).
+  7. If you need a comment inside the article, use the MDX form
+     (curly-brace star ... star curly-brace), NEVER the HTML form with
+     angle-bracket-bang-dashes — the HTML form crashes the page.
+  8. Keep code lines short so they read on phones.
 
-Regular **markdown** works everywhere: _italics_, [links](https://example.com),
-`inline code`, lists, and quotes:
+  BUILDING BLOCKS (all styled automatically — just write them):
+  - Headings ...... "## Section"  and  "### Sub-section"
+  - Emphasis ...... **bold**, _italic_, `inline code`
+  - Links ......... [text](https://example.com)  (external links open in a new tab)
+  - Bullet list ... lines starting with "- "
+  - Numbered list . lines starting with "1. ", "2. ", ...
+  - Quote / callout  a line starting with "> "  becomes a highlighted quote box
+  - Divider ....... a line containing only  ---
+  - Code block .... a line of three backticks + a language (ts, js, bash, py),
+                    then your code, then a line of three backticks. Gets syntax
+                    highlighting, a language label, and a copy button.
+  - Image + caption  ![alt text](/images/blog/<slug>/pic.png "caption text")
+                    the "quoted" part becomes the caption; leave it out for no caption.
 
-> A blockquote for a key takeaway or a quote from a source.
+  ADVANCED — only when embedding an interactive tool/visualiser:
+  - <MapEmbed src="/tools/<name>.html" title="Short description of the tool" />
+    Shows the live tool on desktop and a tidy "open full screen" card on mobile.
+    The tool must be a single self-contained HTML file placed at
+    public/tools/<name>.html. Never hand-write a raw <iframe> — use this instead.
 
-### A Sub-Section (also in the table of contents)
+  WRITING QUALITY (what makes it appealing and easy to read):
+  - Open with a hook: why this matters, in one or two sentences.
+  - One idea per section. Short paragraphs. Lead with the takeaway.
+  - Prefer plain language; define any jargon the first time you use it.
+  - Break up long stretches of text with a list, a quote, or an image.
+  - Close with a clear takeaway. The Sources list renders itself at the end.
+  ═══════════════════════════════════════════════════════════════════════════
+*/}
 
-Add an image (put the file in `public/images/blog/<your-post-slug>/`).
-The text in quotes becomes the caption:
+Open with a hook — one or two sentences on why this topic matters and what the
+reader will get out of it. Keep it concrete.
 
-![Dashboard screenshot](/images/blog/your-post-slug-here/screenshot.png "Optional caption shown under the image")
+## Start with the main idea
 
-## Code Examples
+Explain one idea per section. Use **bold** for emphasis, _italics_ for nuance,
+and [links](https://example.com) for references. Inline `code` looks like this.
 
-Fenced code blocks get syntax highlighting, a language label, and a copy button:
+- A quick point worth calling out
+- Another supporting point
+
+1. Or a numbered step
+2. Followed by the next step
+
+> Use a quote block for a key takeaway, a definition, or a cited quote.
+
+### A sub-section that adds detail
+
+Add an image to explain something visually. Put the file in
+`public/images/blog/your-post-slug/`, write real alt text, and the quoted text
+becomes the caption:
+
+![Descriptive alt text for accessibility](/images/blog/your-post-slug/example.png "Optional caption shown under the image")
+
+## Show code when it helps
+
+Fence code with a language tag to get highlighting, a label, and a copy button:
 
 ```ts
 export function greet(name: string): string {
-  return `Hello, ${name}!`;
+  return `Hello, ${name}`;
 }
 ```
 
-## Wrapping Up
+## Wrap up with the takeaway
 
-Close with the takeaway. The `sources` you listed in the frontmatter render
-automatically as a numbered "Sources & References" section right below this.
+End with the one thing you want the reader to remember. If you filled in
+`sources` above, they render automatically as a numbered
+"Sources &amp; References" list right below this — no need to add it yourself.

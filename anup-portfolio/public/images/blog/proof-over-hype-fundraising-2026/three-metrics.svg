@@ -1,0 +1,49 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="The three metrics that drive 2026 diligence: retention cohorts, gross margin after inference costs, and payback period">
+  <rect width="1000" height="520" fill="#111118"/>
+  <rect x="0.5" y="0.5" width="999" height="519" fill="none" stroke="#2a323c"/>
+
+  <text x="60" y="62" font-size="30" font-weight="bold" fill="#eaedf0">Three numbers do most of the work in 2026 diligence</text>
+  <text x="60" y="94" font-size="16" fill="#8b96a3">Each one rewards a different kind of engineering discipline</text>
+
+  <!-- Card 1: retention cohorts -->
+  <rect x="60" y="140" width="272" height="300" rx="16" fill="#1e1b3a" stroke="#8b5cf6"/>
+  <text x="196" y="180" text-anchor="middle" font-size="17" font-weight="bold" fill="#c4b5fd">RETENTION COHORTS</text>
+  <!-- two cohort curves: healthy flattens, leaky dives -->
+  <line x1="96" y1="330" x2="300" y2="330" stroke="#2a323c" stroke-width="2"/>
+  <path d="M96 220 C 140 240 180 252 300 258" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M96 220 C 150 280 200 318 300 326" fill="none" stroke="#f87171" stroke-width="3.5" stroke-dasharray="5 6" stroke-linecap="round"/>
+  <text x="238" y="248" font-size="11.5" fill="#34d399">needed → flattens</text>
+  <text x="230" y="312" font-size="11.5" fill="#f87171">tried → leaks</text>
+  <text x="196" y="368" text-anchor="middle" font-size="12.5" fill="#8b96a3">who is still active, month after month</text>
+  <text x="196" y="404" text-anchor="middle" font-size="12" font-style="italic" fill="#8b96a3">growth = marketing · cohorts = product</text>
+
+  <!-- Card 2: margin after inference -->
+  <rect x="364" y="140" width="272" height="300" rx="16" fill="#12303a" stroke="#22d3ee"/>
+  <text x="500" y="180" text-anchor="middle" font-size="17" font-weight="bold" fill="#67e8f9">MARGIN AFTER INFERENCE</text>
+  <!-- price bar with cost slice -->
+  <rect x="420" y="210" width="70" height="150" rx="8" fill="#22d3ee"/>
+  <text x="455" y="380" text-anchor="middle" font-size="12" fill="#8b96a3">price</text>
+  <rect x="520" y="210" width="70" height="86" rx="8" fill="#f59e0b"/>
+  <rect x="520" y="304" width="70" height="56" rx="8" fill="#34d399"/>
+  <text x="555" y="380" text-anchor="middle" font-size="12" fill="#8b96a3">model cost · margin</text>
+  <text x="500" y="412" text-anchor="middle" font-size="12" font-style="italic" fill="#8b96a3">caching · routing · honest pricing</text>
+
+  <!-- Card 3: payback -->
+  <rect x="668" y="140" width="272" height="300" rx="16" fill="#1a1a24" stroke="#f59e0b"/>
+  <text x="804" y="180" text-anchor="middle" font-size="17" font-weight="bold" fill="#fbbf24">PAYBACK PERIOD</text>
+  <!-- timeline -->
+  <line x1="704" y1="300" x2="904" y2="300" stroke="#2a323c" stroke-width="3"/>
+  <g fill="#fbbf24">
+    <circle cx="704" cy="300" r="6"/>
+    <circle cx="774" cy="300" r="6"/>
+    <circle cx="844" cy="300" r="6"/>
+  </g>
+  <circle cx="904" cy="300" r="8" fill="#34d399"/>
+  <text x="704" y="330" text-anchor="middle" font-size="11.5" fill="#8b96a3">CAC spent</text>
+  <text x="904" y="330" text-anchor="middle" font-size="11.5" fill="#34d399">repaid</text>
+  <text x="804" y="264" text-anchor="middle" font-size="13" fill="#eaedf0">months of gross profit to</text>
+  <text x="804" y="284" text-anchor="middle" font-size="13" fill="#eaedf0">recover acquisition cost</text>
+  <text x="804" y="404" text-anchor="middle" font-size="12" font-style="italic" fill="#8b96a3">short = self-funding growth</text>
+
+  <text x="60" y="482" font-size="14" font-style="italic" fill="#8b96a3">The founder who answers from a live dashboard is proving the meta-point: this company measures what matters.</text>
+</svg>

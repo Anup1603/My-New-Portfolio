@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import { highlight } from "sugar-high";
 import { Pre } from "@/components/blog/code-block";
+import { MapEmbed } from "@/components/blog/map-embed";
 
 function CodeBlock({
   className,
@@ -83,4 +84,6 @@ export const mdxComponents: MDXComponents = {
     </blockquote>
   ),
   hr: () => <hr className="my-10 border-border" />,
+  // Custom components usable directly in .mdx (capitalised names resolve here).
+  MapEmbed,
 };

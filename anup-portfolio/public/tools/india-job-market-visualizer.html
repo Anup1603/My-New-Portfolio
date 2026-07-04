@@ -1,0 +1,2245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>India Job Market Visualizer — interactive embed</title>
+    <style>
+      :root {
+        --bg: #14181d;
+        --panel: #1c222a;
+        --panel-2: #20272f;
+        --line: #2a323c;
+        --line-soft: #232a33;
+        --text: #eaedf0;
+        --muted: #8b96a3;
+        --muted-2: #5e6975;
+        --accent: #f0a828;
+        --mono:
+          ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo,
+          Consolas, monospace;
+        --sans:
+          "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.45;
+      }
+      .wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 28px 22px 60px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 12px;
+      }
+      h1 {
+        font-size: clamp(28px, 5vw, 50px);
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        font-weight: 800;
+        margin: 0 0 14px;
+      }
+      h1 .thin {
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .lede {
+        color: var(--muted);
+        max-width: 72ch;
+        font-size: 15px;
+        margin: 0 0 6px;
+      }
+      .lede b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .disclaimer {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--muted-2);
+        border-left: 2px solid var(--line);
+        padding: 6px 0 6px 12px;
+        margin: 16px 0 0;
+        max-width: 80ch;
+        line-height: 1.5;
+      }
+
+      /* top nav */
+      .topnav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 18px 0 0;
+      }
+      .topnav a {
+        font-family: var(--mono);
+        font-size: 12px;
+        text-decoration: none;
+        color: var(--muted);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 8px 13px;
+        transition: all 0.16s ease;
+      }
+      .topnav a:hover {
+        color: var(--text);
+        border-color: #3a4450;
+      }
+      .topnav a.primary {
+        background: var(--accent);
+        color: #1a1204;
+        border-color: var(--accent);
+        font-weight: 600;
+      }
+
+      /* explainer */
+      details.explain {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        margin: 22px 0 8px;
+        overflow: hidden;
+      }
+      details.explain > summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 15px 18px;
+        font-weight: 700;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      details.explain > summary::-webkit-details-marker {
+        display: none;
+      }
+      details.explain > summary .hin {
+        font-family: var(--sans);
+        font-weight: 500;
+        color: var(--muted);
+        font-size: 13px;
+        margin-left: 8px;
+      }
+      details.explain > summary .chev {
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 13px;
+        transition: transform 0.2s;
+      }
+      details.explain[open] > summary .chev {
+        transform: rotate(90deg);
+      }
+      .explain-body {
+        padding: 2px 18px 18px;
+        border-top: 1px solid var(--line-soft);
+      }
+      .read-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 14px 0 4px;
+      }
+      .read-grid .card {
+        background: var(--panel-2);
+        border: 1px solid var(--line-soft);
+        border-radius: 9px;
+        padding: 13px 14px;
+      }
+      .read-grid .card .ic {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+      .read-grid .card .h {
+        font-weight: 600;
+        font-size: 13.5px;
+        margin-bottom: 3px;
+      }
+      .read-grid .card .p {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .ai-explain {
+        margin-top: 16px;
+        background: var(--panel-2);
+        border: 1px solid var(--line-soft);
+        border-radius: 9px;
+        padding: 14px 15px;
+      }
+      .ai-explain .h {
+        font-weight: 600;
+        font-size: 13.5px;
+        margin-bottom: 5px;
+      }
+      .ai-explain .h .hin {
+        font-weight: 500;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .ai-explain p {
+        font-size: 12.8px;
+        color: var(--muted);
+        line-height: 1.55;
+        margin: 0 0 7px;
+      }
+      .ai-explain p:last-child {
+        margin-bottom: 0;
+      }
+      .ai-explain b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .keyfacts {
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .keyfacts .kf {
+        display: flex;
+        gap: 9px;
+        font-size: 12.8px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .keyfacts .kf .dot {
+        color: var(--accent);
+        flex: 0 0 auto;
+      }
+      .keyfacts .kf b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* stat strip */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line-soft);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 22px 0 20px;
+      }
+      .stat {
+        background: var(--panel);
+        padding: 14px 16px;
+      }
+      .stat .num {
+        font-family: var(--mono);
+        font-size: clamp(19px, 2.6vw, 26px);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .stat .lbl {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .stat .num .u {
+        font-size: 0.62em;
+        color: var(--muted);
+        margin-left: 2px;
+      }
+
+      /* controls */
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin: 0 0 6px;
+      }
+      .controls .grp-label {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-2);
+        margin-right: 4px;
+      }
+      .seg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .seg button {
+        font-family: var(--mono);
+        font-size: 12px;
+        background: var(--panel);
+        color: var(--muted);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: all 0.16s ease;
+      }
+      .seg button:hover {
+        color: var(--text);
+        border-color: #3a4450;
+      }
+      .seg button[aria-pressed="true"] {
+        background: var(--accent);
+        color: #1a1204;
+        border-color: var(--accent);
+        font-weight: 600;
+      }
+      .seg button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      #layerHint {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin: 0 0 12px;
+        min-height: 18px;
+      }
+      #layerHint b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* layout */
+      .stage {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 16px;
+        margin-top: 6px;
+        align-items: start;
+      }
+      .map-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px;
+      }
+      #treemap {
+        position: relative;
+        width: 100%;
+        height: min(64vh, 620px);
+        min-height: 440px;
+        border-radius: 7px;
+        overflow: hidden;
+      }
+      .tile {
+        position: absolute;
+        overflow: hidden;
+        border: 1px solid rgba(10, 14, 18, 0.55);
+        cursor: pointer;
+        display: block;
+        text-align: left;
+        padding: 6px 7px;
+        font-family: var(--mono);
+        transition:
+          transform 0.12s ease,
+          filter 0.12s ease,
+          background-color 0.35s ease;
+        background: #333;
+      }
+      .tile:hover {
+        filter: brightness(1.08);
+        z-index: 5;
+      }
+      .tile:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: -2px;
+        z-index: 6;
+      }
+      .tile.sel {
+        outline: 2.5px solid #fff;
+        outline-offset: -2px;
+        z-index: 7;
+      }
+      .tile .t-name {
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+      }
+      .tile .t-val {
+        font-size: 10px;
+        opacity: 0.82;
+        margin-top: 2px;
+      }
+      .tile.light {
+        color: #0b0f14;
+      }
+      .tile.dark {
+        color: #f2f5f8;
+      }
+
+      .side {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .side-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .side-card h3 {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 12px;
+        font-weight: 500;
+      }
+      .legend-bar {
+        height: 12px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+      .legend-scale {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--muted);
+      }
+      .legend-cats {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 2px;
+      }
+      .legend-cats .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+      }
+      .legend-cats .sw {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        flex: 0 0 auto;
+      }
+      .legend-note {
+        font-size: 11px;
+        color: var(--muted-2);
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+
+      #detail .empty {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      #detail .d-name {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 0 0 2px;
+      }
+      #detail .d-sector {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .d-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--line-soft);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .d-metrics .m {
+        background: var(--panel-2);
+        padding: 9px 11px;
+      }
+      .d-metrics .m .k {
+        font-size: 10px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .d-metrics .m .v {
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 3px;
+      }
+      /* consistent detail card */
+      #detail .d-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 9px 12px;
+        border-radius: 8px;
+        margin: 0 0 14px;
+        line-height: 1.2;
+      }
+      #detail .d-group .gdot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+      }
+      .d-meter {
+        margin: 0 0 12px;
+      }
+      .d-meter .lab {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin-bottom: 5px;
+      }
+      .d-meter .lab .val {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--text);
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+      .d-meter .bar {
+        height: 8px;
+        border-radius: 4px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .d-meter .bar i {
+        display: block;
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+      #detail .rationale {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.55;
+        margin: 2px 0 10px;
+      }
+      #detail .rationale b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      #detail .local {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.55;
+        background: var(--panel-2);
+        border-left: 2px solid var(--accent);
+        border-radius: 0 6px 6px 0;
+        padding: 8px 11px;
+      }
+      #detail .local .lh {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      /* quadrant chart */
+      .section-head {
+        margin: 40px 0 6px;
+      }
+      .section-head h2 {
+        font-size: clamp(20px, 3vw, 28px);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 6px;
+      }
+      .section-head h2 .hin {
+        font-family: var(--sans);
+        font-weight: 500;
+        color: var(--muted);
+        font-size: 0.6em;
+        margin-left: 8px;
+      }
+      .section-head p {
+        color: var(--muted);
+        max-width: 78ch;
+        font-size: 13.5px;
+        margin: 0;
+      }
+      .section-head p b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .quad-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 14px;
+      }
+      .quad-wrap {
+        width: 100%;
+        overflow-x: auto;
+      }
+      #quadChart {
+        display: block;
+        width: 100%;
+        height: auto;
+        min-width: 520px;
+      }
+      .quad-dot {
+        cursor: pointer;
+        transition: opacity 0.15s ease;
+      }
+      .quad-dot:hover {
+        opacity: 1 !important;
+        stroke: #fff;
+        stroke-width: 1.5;
+      }
+      .quad-axis {
+        stroke: var(--line);
+        stroke-width: 1;
+      }
+      .quad-grid {
+        stroke: var(--line-soft);
+        stroke-width: 1;
+        stroke-dasharray: 3 4;
+      }
+      .quad-qlabel {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 600;
+        fill: var(--muted);
+        letter-spacing: 0.02em;
+      }
+      .quad-qsub {
+        font-family: var(--sans);
+        font-size: 9.5px;
+        fill: var(--muted-2);
+      }
+      .quad-axislabel {
+        font-family: var(--mono);
+        font-size: 11px;
+        fill: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .quad-tick {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        fill: var(--muted-2);
+      }
+      .quad-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+      .quad-legend .li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .quad-legend .bubble {
+        border-radius: 50%;
+        background: var(--muted-2);
+        display: inline-block;
+      }
+      /* quadrant hover tooltip */
+      .quad-tip {
+        position: fixed;
+        z-index: 60;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(5px);
+        transition:
+          opacity 0.12s ease,
+          transform 0.12s ease;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        border-radius: 10px;
+        padding: 11px 13px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        max-width: 250px;
+      }
+      .quad-tip.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .quad-tip .tn {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 2px;
+      }
+      .quad-tip .ts {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 9px;
+      }
+      .quad-tip .tr {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 11.5px;
+        margin-bottom: 4px;
+      }
+      .quad-tip .tr .k {
+        color: var(--muted);
+      }
+      .quad-tip .tr .v {
+        font-family: var(--mono);
+        color: var(--text);
+        font-weight: 600;
+      }
+      .quad-tip .tgrp {
+        margin-top: 6px;
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        padding: 3px 9px;
+        border-radius: 20px;
+        display: inline-block;
+      }
+
+      footer {
+        margin-top: 34px;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted-2);
+        line-height: 1.7;
+        max-width: 92ch;
+      }
+      footer b {
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .byline {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin: 22px 0 0;
+        padding: 13px 16px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .byline .who {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .byline .role {
+        color: var(--muted-2);
+      }
+      .byline a {
+        color: var(--accent);
+        text-decoration: none;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 5px 10px;
+        transition: all 0.16s ease;
+      }
+      .byline a:hover {
+        border-color: var(--accent);
+      }
+      .glossary {
+        margin: 14px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 22px;
+      }
+      .glossary .g {
+        font-size: 11px;
+        color: var(--muted-2);
+        line-height: 1.5;
+      }
+      .glossary .g b {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      @media (max-width: 860px) {
+        .stage {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .read-grid {
+          grid-template-columns: 1fr;
+        }
+        .glossary {
+          grid-template-columns: 1fr;
+        }
+        #treemap {
+          height: 72vh;
+          min-height: 420px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    
+      /* ---- embed overrides ---- */
+      .wrap.embed { max-width: 1180px; padding: 16px 16px 26px; }
+      .embed-caveat {
+        font-family: var(--mono); font-size: 11.5px; color: var(--muted-2);
+        border-left: 2px solid var(--line); padding: 8px 0 8px 12px;
+        margin: 0 0 14px; max-width: 92ch; line-height: 1.55;
+      }
+      .embed-caveat b { color: var(--muted); font-weight: 600; }
+      details.explain { margin: 0 0 16px; }
+      .embed-foot {
+        margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line);
+        font-family: var(--mono); font-size: 10.5px; color: var(--muted-2); letter-spacing: 0.04em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap embed">
+      <p class="embed-caveat">
+        ⚠ <b>Illustrative prototype.</b> Tile numbers are careful estimates, not official
+        figures — their sizes are matched to real government survey shares
+        (~63.7 crore / 637 million workers, ~43% in farming, ~84% of non-farm work informal).
+        "Future resilience" is a way to <i>reason</i> about jobs, not a prediction.
+      </p>
+
+      <details class="explain">
+        <summary>
+          <span>How to read this map <span class="hin">यह नक्शा कैसे पढ़ें</span></span>
+          <span class="chev">▸</span>
+        </summary>
+        <div class="explain-body">
+          <div class="read-grid">
+            <div class="card"><div class="ic">🟦</div><div class="h">Each tile is a job</div>
+              <div class="p">One rectangle = one type of work, from farming to software. Tap or click any tile to read about it.</div></div>
+            <div class="card"><div class="ic">📐</div><div class="h">Size = number of people</div>
+              <div class="p">A bigger tile means more Indians do that job. Farming tiles are huge; software is a small tile.</div></div>
+            <div class="card"><div class="ic">🎨</div><div class="h">Colour = the layer you pick</div>
+              <div class="p">Recolour the map by AI exposure, <b>future resilience</b>, pay, education, growth, or sector.</div></div>
+          </div>
+          <div class="ai-explain">
+            <div class="h">What does "AI exposure" mean? <span class="hin">— "AI का असर" का मतलब?</span></div>
+            <p>A 0–10 score for <b>how much of a job today's computers and AI could do, or make much faster</b>. Desk-and-screen work scores high; hands-on work that needs your body or a real person present — farming, cooking, nursing, driving, repairs — scores low.</p>
+            <p>A high score means the job will likely <b>change</b>, not vanish. Think "how different will this job feel in a few years," not "will it disappear."</p>
+          </div>
+        </div>
+      </details>
+
+      <div class="stats" id="statStrip"></div>
+
+      <div class="controls">
+        <span class="grp-label">Colour&nbsp;by</span>
+        <div class="seg" id="layerSeg" role="group" aria-label="Color layer">
+          <button data-layer="ai" aria-pressed="true">AI exposure</button>
+          <button data-layer="res" aria-pressed="false">Future resilience</button>
+          <button data-layer="pay" aria-pressed="false">Median pay</button>
+          <button data-layer="edu" aria-pressed="false">Education</button>
+          <button data-layer="growth" aria-pressed="false">Growth outlook</button>
+          <button data-layer="sector" aria-pressed="false">Sector</button>
+        </div>
+      </div>
+      <p id="layerHint"></p>
+
+      <div class="stage">
+        <div class="map-card">
+          <div id="treemap" role="img" aria-label="Treemap of Indian occupations sized by number of workers"></div>
+        </div>
+        <div class="side">
+          <div class="side-card">
+            <h3 id="legendTitle">AI exposure (0–10)</h3>
+            <div id="legend"></div>
+          </div>
+          <div class="side-card" id="detail">
+            <h3>Selected job</h3>
+            <div class="empty">Tap or click any tile to see how many people do it, what it pays, the usual education, its outlook, its future-resilience score, and why it gets its AI-exposure score.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2>The future on one screen <span class="hin">एक नज़र में भविष्य</span></h2>
+        <p>Every job placed by <b>how exposed it is to AI</b> (left = safe, right = exposed) and <b>whether demand is growing</b> (bottom = shrinking, top = fast-growing). Bubble size = number of workers; colour = future resilience. Click any bubble to open that job.</p>
+      </div>
+      <div class="quad-card">
+        <div class="quad-wrap">
+          <svg id="quadChart" viewBox="0 0 820 520" role="img" aria-label="Scatter chart of Indian jobs by AI exposure and growth"></svg>
+        </div>
+        <div class="quad-legend">
+          <span class="li">Bubble size = workers:</span>
+          <span class="li"><span class="bubble" style="width:8px;height:8px"></span> ~2 cr</span>
+          <span class="li"><span class="bubble" style="width:16px;height:16px"></span> ~8 cr</span>
+          <span class="li"><span class="bubble" style="width:26px;height:26px"></span> ~15 cr</span>
+          <span class="li" style="margin-left:8px">Colour = future resilience (red → green)</span>
+        </div>
+      </div>
+      <div id="quadTip" class="quad-tip" role="status" aria-live="polite"></div>
+
+      <p class="embed-foot">
+        India Job Market Visualizer · prototype v3 (embed) · illustrative data · built by Anup Kumar Shaw
+      </p>
+    </div>
+    <script>
+      /* ===== DATA (illustrative). emp = millions of workers. pay = median ₹/month.
+   local = India-specific colour shown in the detail panel. ===== */
+      const EDU_TIERS = [
+        "Below primary",
+        "Primary",
+        "Secondary",
+        "Diploma/ITI",
+        "Graduate",
+        "Post-graduate",
+      ];
+      const eduIdx = (e) => EDU_TIERS.indexOf(e);
+
+      const DATA = [
+        {
+          name: "Cultivators & small farmers",
+          sector: "Agriculture",
+          emp: 145,
+          pay: 8000,
+          edu: "Below primary",
+          ai: 2,
+          growth: "declining",
+          note: "Land-bound physical work; AI reaches only advice like crop or price apps.",
+          local:
+            "The single largest group of workers in India. Apps like weather, mandi-price and crop-advisory tools help a little, but the work itself stays in the field.",
+        },
+        {
+          name: "Agricultural labourers",
+          sector: "Agriculture",
+          emp: 95,
+          pay: 6000,
+          edu: "Below primary",
+          ai: 1,
+          growth: "declining",
+          note: "Manual field labour with almost no digital surface.",
+          local:
+            "Among the lowest-paid and least AI-exposed work in the country — and among the largest.",
+        },
+        {
+          name: "Livestock & dairy workers",
+          sector: "Agriculture",
+          emp: 12,
+          pay: 8000,
+          edu: "Primary",
+          ai: 3,
+          growth: "growing",
+          note: "Hands-on animal care; some sensor and logistics help.",
+          local:
+            "India is the world's largest milk producer; most of this is small household dairying.",
+        },
+        {
+          name: "Fishers & aquaculture",
+          sector: "Agriculture",
+          emp: 8,
+          pay: 9000,
+          edu: "Primary",
+          ai: 2,
+          growth: "stable",
+          note: "Physical, outdoor, unpredictable conditions.",
+        },
+
+        {
+          name: "Construction labourers",
+          sector: "Construction",
+          emp: 55,
+          pay: 12000,
+          edu: "Primary",
+          ai: 1,
+          growth: "growing",
+          note: "Real-time physical work on site; almost no AI reach.",
+          local:
+            "A huge absorber of workers leaving farming, especially seasonal migrants.",
+        },
+        {
+          name: "Masons, carpenters & skilled build",
+          sector: "Construction",
+          emp: 18,
+          pay: 18000,
+          edu: "Secondary",
+          ai: 2,
+          growth: "growing",
+          note: "Manual craft skill; AI limited to planning and estimates.",
+        },
+        {
+          name: "Electricians",
+          sector: "Trades",
+          emp: 6,
+          pay: 16000,
+          edu: "Diploma/ITI",
+          ai: 2,
+          growth: "growing",
+          note: "On-site diagnosis and installation; protected by needing to be there.",
+        },
+        {
+          name: "Plumbers & fitters",
+          sector: "Trades",
+          emp: 3,
+          pay: 15000,
+          edu: "Diploma/ITI",
+          ai: 2,
+          growth: "growing",
+          note: "Physical repair in unpredictable settings.",
+        },
+
+        {
+          name: "Shopkeepers (self-employed)",
+          sector: "Retail",
+          emp: 35,
+          pay: 14000,
+          edu: "Secondary",
+          ai: 4,
+          growth: "stable",
+          note: "Relationships and cash handling; AI helps with stock and billing.",
+          local:
+            "The neighbourhood kirana store. Now feeling pressure from quick-commerce apps like Blinkit and Zepto, not so much from AI directly.",
+        },
+        {
+          name: "Retail sales staff",
+          sector: "Retail",
+          emp: 15,
+          pay: 13000,
+          edu: "Secondary",
+          ai: 5,
+          growth: "stable",
+          note: "In-person selling, but recommendations and checkout can be automated.",
+        },
+        {
+          name: "Street vendors & hawkers",
+          sector: "Retail",
+          emp: 12,
+          pay: 9000,
+          edu: "Primary",
+          ai: 3,
+          growth: "stable",
+          note: "Mobile, cash-based, informal; low digital exposure.",
+          local:
+            "UPI QR codes are now common even at thela and roadside stalls — payments went digital, the work did not.",
+        },
+        {
+          name: "Cashiers",
+          sector: "Retail",
+          emp: 3,
+          pay: 12000,
+          edu: "Secondary",
+          ai: 7,
+          growth: "declining",
+          note: "Very routine transaction task; self-checkout erodes it.",
+          local:
+            "UPI and phone payments already do much of what a cashier used to — one of the more exposed shop-floor roles.",
+        },
+
+        {
+          name: "Textile & garment workers",
+          sector: "Manufacturing",
+          emp: 45,
+          pay: 11000,
+          edu: "Primary",
+          ai: 4,
+          growth: "stable",
+          note: "Repetitive but manual; automation is slow and cost-gated.",
+          local:
+            "Think Tirupur, Surat and Ludhiana. Cheap labour has kept full automation at bay so far.",
+        },
+        {
+          name: "Factory machine operators",
+          sector: "Manufacturing",
+          emp: 15,
+          pay: 14000,
+          edu: "Secondary",
+          ai: 5,
+          growth: "stable",
+          note: "Robotics and vision can replace some tasks over time.",
+        },
+        {
+          name: "Handicraft & artisan workers",
+          sector: "Manufacturing",
+          emp: 7,
+          pay: 9000,
+          edu: "Primary",
+          ai: 3,
+          growth: "declining",
+          note: "Bespoke manual craft; being handmade is part of the value.",
+        },
+        {
+          name: "Food processing workers",
+          sector: "Manufacturing",
+          emp: 6,
+          pay: 11000,
+          edu: "Primary",
+          ai: 4,
+          growth: "growing",
+          note: "Line work; partly automatable.",
+        },
+        {
+          name: "Auto & assembly workers",
+          sector: "Manufacturing",
+          emp: 5,
+          pay: 19000,
+          edu: "Diploma/ITI",
+          ai: 5,
+          growth: "stable",
+          note: "Robotised lines already cut some roles.",
+        },
+
+        {
+          name: "Auto & taxi drivers",
+          sector: "Transport",
+          emp: 12,
+          pay: 15000,
+          edu: "Secondary",
+          ai: 4,
+          growth: "stable",
+          note: "Driving is physical; self-driving is far off on Indian roads.",
+          local:
+            "Ola and Uber changed how rides are booked and priced, but a human still drives — and will for a long time here.",
+        },
+        {
+          name: "Truck & heavy-vehicle drivers",
+          sector: "Transport",
+          emp: 9,
+          pay: 18000,
+          edu: "Secondary",
+          ai: 5,
+          growth: "stable",
+          note: "Long-haul automation is possible much later; routing is already AI-assisted.",
+        },
+        {
+          name: "Delivery & gig riders",
+          sector: "Transport",
+          emp: 8,
+          pay: 16000,
+          edu: "Secondary",
+          ai: 5,
+          growth: "fast-growing",
+          note: "Dispatch is run by algorithms; the last-mile ride stays human for now.",
+          local:
+            "Zomato, Swiggy, Blinkit, Amazon and Flipkart riders. The app decides the route and pay; the person does the ride.",
+        },
+        {
+          name: "Warehouse & loading workers",
+          sector: "Transport",
+          emp: 6,
+          pay: 12000,
+          edu: "Primary",
+          ai: 4,
+          growth: "growing",
+          note: "Warehouse robotics is rising at the big players.",
+        },
+
+        {
+          name: "Domestic workers",
+          sector: "Personal Services",
+          emp: 12,
+          pay: 8000,
+          edu: "Below primary",
+          ai: 1,
+          growth: "growing",
+          note: "Home-based physical care; essentially no AI exposure.",
+          local:
+            "Maids, cooks and helpers in homes — one of the least AI-touchable jobs there is.",
+        },
+        {
+          name: "Security guards",
+          sector: "Personal Services",
+          emp: 9,
+          pay: 13000,
+          edu: "Secondary",
+          ai: 3,
+          growth: "growing",
+          note: "Presence-based; CCTV and AI help but rarely replace.",
+        },
+        {
+          name: "Cleaners & sanitation",
+          sector: "Personal Services",
+          emp: 8,
+          pay: 10000,
+          edu: "Primary",
+          ai: 2,
+          growth: "stable",
+          note: "Physical work across scattered places.",
+        },
+        {
+          name: "Cooks & food-stall workers",
+          sector: "Hospitality",
+          emp: 8,
+          pay: 11000,
+          edu: "Primary",
+          ai: 3,
+          growth: "growing",
+          note: "Manual food prep; taste and dexterity resist automation.",
+        },
+        {
+          name: "Beauticians & salon staff",
+          sector: "Personal Services",
+          emp: 4,
+          pay: 12000,
+          edu: "Secondary",
+          ai: 3,
+          growth: "growing",
+          note: "Hands-on personal service.",
+        },
+
+        {
+          name: "Hotel & restaurant staff",
+          sector: "Hospitality",
+          emp: 9,
+          pay: 12000,
+          edu: "Secondary",
+          ai: 4,
+          growth: "growing",
+          note: "In-person service; ordering and booking are partly automatable.",
+        },
+        {
+          name: "Chefs (formal kitchens)",
+          sector: "Hospitality",
+          emp: 2,
+          pay: 18000,
+          edu: "Secondary",
+          ai: 3,
+          growth: "growing",
+          note: "Creative and manual; low exposure.",
+        },
+
+        {
+          name: "School teachers",
+          sector: "Education",
+          emp: 9,
+          pay: 25000,
+          edu: "Graduate",
+          ai: 5,
+          growth: "stable",
+          note: "The human relationship is central; AI helps with prep and grading.",
+          local:
+            "AI tools can help make lessons and check papers, but managing a classroom of children stays deeply human.",
+        },
+        {
+          name: "Tutors & coaching staff",
+          sector: "Education",
+          emp: 3,
+          pay: 20000,
+          edu: "Graduate",
+          ai: 6,
+          growth: "growing",
+          note: "AI tutoring competes directly with delivering content.",
+          local:
+            "India's coaching culture (Kota, exam prep) meets AI tutors and edtech apps that can explain and quiz for free.",
+        },
+        {
+          name: "College & university faculty",
+          sector: "Education",
+          emp: 1.5,
+          pay: 55000,
+          edu: "Post-graduate",
+          ai: 6,
+          growth: "stable",
+          note: "Research and mentoring resist; content delivery is exposed.",
+        },
+
+        {
+          name: "Nurses",
+          sector: "Healthcare",
+          emp: 3,
+          pay: 22000,
+          edu: "Graduate",
+          ai: 4,
+          growth: "growing",
+          note: "Hands-on care; AI supports records and triage.",
+        },
+        {
+          name: "ASHA & community health workers",
+          sector: "Healthcare",
+          emp: 3,
+          pay: 6000,
+          edu: "Secondary",
+          ai: 3,
+          growth: "stable",
+          note: "Village outreach; depends on being present in person.",
+          local:
+            "The familiar ASHA and anganwadi workers who visit homes — trusted, local, and hard for any app to replace.",
+        },
+        {
+          name: "Lab technicians",
+          sector: "Healthcare",
+          emp: 1.5,
+          pay: 18000,
+          edu: "Diploma/ITI",
+          ai: 6,
+          growth: "growing",
+          note: "Imaging and sample analysis are increasingly AI-assisted.",
+        },
+        {
+          name: "Doctors",
+          sector: "Healthcare",
+          emp: 1.2,
+          pay: 70000,
+          edu: "Post-graduate",
+          ai: 5,
+          growth: "growing",
+          note: "Diagnosis is AI-augmented; judgement, procedures and trust stay human.",
+          local:
+            "AI can help read scans and suggest diagnoses, but patients still want a doctor they can talk to.",
+        },
+        {
+          name: "Pharmacists",
+          sector: "Healthcare",
+          emp: 1,
+          pay: 20000,
+          edu: "Graduate",
+          ai: 6,
+          growth: "growing",
+          note: "Dispensing and checks are partly automatable.",
+        },
+
+        {
+          name: "Accountants & bookkeepers",
+          sector: "Finance",
+          emp: 4,
+          pay: 25000,
+          edu: "Graduate",
+          ai: 8,
+          growth: "stable",
+          note: "Structured, rule-based number work — squarely in AI's zone.",
+          local:
+            "Much day-to-day work is GST returns and Tally entries — exactly the kind of routine AI is getting good at.",
+        },
+        {
+          name: "Insurance & loan agents",
+          sector: "Finance",
+          emp: 3,
+          pay: 20000,
+          edu: "Secondary",
+          ai: 7,
+          growth: "stable",
+          note: "Information handling plus scripted selling; heavily automatable.",
+          local:
+            "The classic LIC-agent role — a lot of it is paperwork and standard pitches that software can now handle.",
+        },
+        {
+          name: "Bank clerks & tellers",
+          sector: "Finance",
+          emp: 2,
+          pay: 28000,
+          edu: "Graduate",
+          ai: 8,
+          growth: "declining",
+          note: "Routine transactions; digital banking is already shrinking it.",
+          local:
+            "UPI, ATMs and mobile banking mean far fewer people walk up to a counter than a decade ago.",
+        },
+        {
+          name: "Financial analysts",
+          sector: "Finance",
+          emp: 0.8,
+          pay: 60000,
+          edu: "Post-graduate",
+          ai: 8,
+          growth: "growing",
+          note: "Screen-based analysis; AI is a strong productivity multiplier.",
+        },
+
+        {
+          name: "Software developers",
+          sector: "IT",
+          emp: 3,
+          pay: 65000,
+          edu: "Graduate",
+          ai: 9,
+          growth: "fast-growing",
+          note: "Fully digital work; AI is reshaping it fast — though demand can grow too.",
+          local:
+            "The engine of Bengaluru, Hyderabad and Pune. AI writes code now, but it also creates more software to build.",
+        },
+        {
+          name: "BPO & call-centre agents",
+          sector: "IT",
+          emp: 2.5,
+          pay: 22000,
+          edu: "Secondary",
+          ai: 8,
+          growth: "declining",
+          note: "Scripted voice and chat — directly targeted by conversational AI.",
+          local:
+            "India built a global name in call centres; AI voice and chat bots are now aimed straight at this work.",
+        },
+        {
+          name: "IT support & testing",
+          sector: "IT",
+          emp: 2,
+          pay: 35000,
+          edu: "Graduate",
+          ai: 8,
+          growth: "stable",
+          note: "Diagnostic and repetitive testing tasks are highly automatable.",
+        },
+        {
+          name: "Data-entry operators",
+          sector: "IT",
+          emp: 2,
+          pay: 15000,
+          edu: "Secondary",
+          ai: 9,
+          growth: "declining",
+          note: "Pure typing and transcription — among the most exposed jobs anywhere.",
+        },
+        {
+          name: "Digital marketing & content",
+          sector: "IT",
+          emp: 1,
+          pay: 30000,
+          edu: "Graduate",
+          ai: 8,
+          growth: "growing",
+          note: "Copy, creatives and analytics are generative AI's home turf.",
+        },
+        {
+          name: "Data analysts & scientists",
+          sector: "IT",
+          emp: 0.6,
+          pay: 70000,
+          edu: "Post-graduate",
+          ai: 8,
+          growth: "fast-growing",
+          note: "Screen-based; heavily augmented, yet demand keeps rising.",
+        },
+
+        {
+          name: "Government clerks & admin",
+          sector: "Government",
+          emp: 6,
+          pay: 30000,
+          edu: "Graduate",
+          ai: 7,
+          growth: "stable",
+          note: "Paperwork and processing; automatable but institutionally sticky.",
+          local:
+            "The classic sarkari desk job — lots of forms and files, but change tends to be slow here.",
+        },
+        {
+          name: "Police & defence",
+          sector: "Government",
+          emp: 4,
+          pay: 32000,
+          edu: "Secondary",
+          ai: 3,
+          growth: "stable",
+          note: "Physical presence and authority; low core exposure.",
+        },
+        {
+          name: "Postal & utility workers",
+          sector: "Government",
+          emp: 2,
+          pay: 25000,
+          edu: "Secondary",
+          ai: 5,
+          growth: "declining",
+          note: "Sorting and routing are automatable; field delivery less so.",
+        },
+
+        {
+          name: "Engineers (non-software)",
+          sector: "Professional",
+          emp: 3,
+          pay: 35000,
+          edu: "Graduate",
+          ai: 6,
+          growth: "growing",
+          note: "Design and analysis are AI-assisted; site work and judgement stay human.",
+        },
+        {
+          name: "Lawyers",
+          sector: "Professional",
+          emp: 1.5,
+          pay: 40000,
+          edu: "Graduate",
+          ai: 6,
+          growth: "stable",
+          note: "Research and drafting are exposed; courtroom work and trust are human.",
+          local:
+            "AI can draft and search case law fast, but arguing before a judge and earning client trust cannot be outsourced to it.",
+        },
+        {
+          name: "Journalists & media",
+          sector: "Professional",
+          emp: 0.6,
+          pay: 28000,
+          edu: "Graduate",
+          ai: 7,
+          growth: "declining",
+          note: "Writing and editing sit squarely in generative AI's path.",
+        },
+        {
+          name: "Architects & designers",
+          sector: "Professional",
+          emp: 0.5,
+          pay: 40000,
+          edu: "Graduate",
+          ai: 7,
+          growth: "growing",
+          note: "Generative design tools are reshaping the workflow fast.",
+        },
+
+        {
+          name: "Miners & quarry workers",
+          sector: "Mining",
+          emp: 3,
+          pay: 15000,
+          edu: "Primary",
+          ai: 2,
+          growth: "stable",
+          note: "Heavy physical work; automation is capital-intensive.",
+        },
+      ];
+
+      /* ---- resilience score: 60% AI-shielding + 40% demand trend, 0..10 ---- */
+      const GROWTH_SCORE = {
+        declining: 2,
+        stable: 5,
+        growing: 8,
+        "fast-growing": 10,
+      };
+      const GROWTH_Y = {
+        declining: 0,
+        stable: 1,
+        growing: 2,
+        "fast-growing": 3,
+      };
+      function resilience(d) {
+        return 0.6 * (10 - d.ai) + 0.4 * GROWTH_SCORE[d.growth];
+      }
+      /* Canonical four-group classification — shared, identical logic with the Future & safe jobs guide */
+      const GROUPS = {
+        1: { label: "Resilient & in demand", color: "#1A9E8F" },
+        2: { label: "Changing, not disappearing", color: "#4C93D1" },
+        3: { label: "Under pressure", color: "#D1495B" },
+        4: { label: "Shielded, but fragile", color: "#EE9B30" },
+      };
+      function groupOf(d) {
+        const grow = d.growth === "growing" || d.growth === "fast-growing";
+        if (d.ai >= 6 && !grow) return 3; // exposed & not growing
+        if (d.ai >= 6 && grow) return 2; // exposed but demand rising
+        if (d.ai >= 5 && d.growth === "declining") return 3;
+        if (d.ai >= 5 && grow) return 2; // e.g. doctors, gig riders
+        if (d.pay <= 9000 || d.growth === "declining") return 4; // AI-safe but low-paid / shrinking
+        return 1; // resilient & in demand
+      }
+      DATA.forEach((d) => {
+        d.res = resilience(d);
+        d.grp = groupOf(d);
+      });
+
+      /* ---- Indian number helpers ---- */
+      function indianShort(m) {
+        const cr = m / 10;
+        if (cr >= 1) {
+          let s = cr.toFixed(1);
+          if (s.endsWith(".0")) s = s.slice(0, -2);
+          return s + " cr";
+        }
+        return m * 10 + " L";
+      }
+      function indianWords(m) {
+        const cr = m / 10;
+        if (cr >= 1) {
+          let s = cr.toFixed(1);
+          if (s.endsWith(".0")) s = s.slice(0, -2);
+          return s + " crore";
+        }
+        return m * 10 + " lakh";
+      }
+      function fmtM(m) {
+        return m >= 10
+          ? m.toFixed(0)
+          : Number.isInteger(m)
+            ? m.toFixed(0)
+            : m.toFixed(1);
+      }
+      function fullEmp(m) {
+        return `${fmtM(m)}M (${indianWords(m)})`;
+      }
+      const fmtPay = (p) => "₹" + p.toLocaleString("en-IN");
+
+      /* ---- color helpers ---- */
+      function hex2rgb(h) {
+        h = h.replace("#", "");
+        return [
+          parseInt(h.slice(0, 2), 16),
+          parseInt(h.slice(2, 4), 16),
+          parseInt(h.slice(4, 6), 16),
+        ];
+      }
+      function rgb2hex(r, g, b) {
+        const c = (x) => Math.round(x).toString(16).padStart(2, "0");
+        return "#" + c(r) + c(g) + c(b);
+      }
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+      function rampColor(stops, t) {
+        t = Math.max(0, Math.min(1, t));
+        for (let i = 0; i < stops.length - 1; i++) {
+          const [p0, c0] = stops[i],
+            [p1, c1] = stops[i + 1];
+          if (t >= p0 && t <= p1) {
+            const lt = (t - p0) / (p1 - p0 || 1);
+            const a = hex2rgb(c0),
+              b = hex2rgb(c1);
+            return rgb2hex(
+              lerp(a[0], b[0], lt),
+              lerp(a[1], b[1], lt),
+              lerp(a[2], b[2], lt),
+            );
+          }
+        }
+        return stops[stops.length - 1][1];
+      }
+      function luminance(hex) {
+        const [r, g, b] = hex2rgb(hex);
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      }
+
+      const AI_STOPS = [
+        [0, "#1A9E8F"],
+        [0.35, "#A7C957"],
+        [0.6, "#F2C14E"],
+        [0.8, "#EE7B30"],
+        [1, "#D1495B"],
+      ];
+      const RES_STOPS = [
+        [0, "#D1495B"],
+        [0.35, "#EE7B30"],
+        [0.55, "#F2C14E"],
+        [0.8, "#A7C957"],
+        [1, "#1A9E8F"],
+      ];
+      const PAY_STOPS = [
+        [0, "#0B3D2E"],
+        [0.4, "#1B7A4B"],
+        [0.7, "#3FB068"],
+        [1, "#B7E6A3"],
+      ];
+      const EDU_STOPS = [
+        [0, "#2A1B3D"],
+        [0.2, "#4A2E6B"],
+        [0.4, "#6B4A9E"],
+        [0.6, "#8E6FC0"],
+        [0.8, "#B79CE0"],
+        [1, "#DBC8F5"],
+      ];
+      const GROWTH_COLORS = {
+        declining: "#C0504D",
+        stable: "#6B7684",
+        growing: "#5AAE77",
+        "fast-growing": "#2E7D46",
+      };
+      const GROWTH_LABEL = {
+        declining: "Declining",
+        stable: "Stable",
+        growing: "Growing",
+        "fast-growing": "Fast-growing",
+      };
+      const SECTOR_COLORS = {
+        Agriculture: "#7CA33F",
+        Construction: "#C98A3B",
+        Trades: "#B5732E",
+        Retail: "#D06B8C",
+        Manufacturing: "#6E7FC4",
+        Transport: "#4BA3B0",
+        "Personal Services": "#B07CC6",
+        Hospitality: "#CE8F5A",
+        Education: "#4C93D1",
+        Healthcare: "#4FAE8E",
+        Finance: "#C7A93E",
+        IT: "#E0784C",
+        Government: "#8892A0",
+        Professional: "#9B6FD1",
+        Mining: "#8A7A5E",
+      };
+
+      const payVals = DATA.map((d) => d.pay);
+      const payMin = Math.min(...payVals),
+        payMax = Math.max(...payVals);
+      const payT = (p) =>
+        (Math.log(p) - Math.log(payMin)) /
+        (Math.log(payMax) - Math.log(payMin));
+      const resColor = (r) => rampColor(RES_STOPS, r / 10);
+      function colorFor(d, layer) {
+        switch (layer) {
+          case "ai":
+            return rampColor(AI_STOPS, d.ai / 10);
+          case "res":
+            return resColor(d.res);
+          case "pay":
+            return rampColor(PAY_STOPS, payT(d.pay));
+          case "edu":
+            return rampColor(EDU_STOPS, eduIdx(d.edu) / (EDU_TIERS.length - 1));
+          case "growth":
+            return GROWTH_COLORS[d.growth];
+          case "sector":
+            return SECTOR_COLORS[d.sector];
+        }
+      }
+
+      /* ---- squarified treemap ---- */
+      function squarify(items, x, y, width, height) {
+        const total = items.reduce((s, d) => s + d.value, 0);
+        const scale = (width * height) / total;
+        let remaining = items
+          .map((d) => ({ ...d, area: d.value * scale }))
+          .sort((a, b) => b.area - a.area);
+        const out = [];
+        let rect = { x, y, w: width, h: height };
+        const worst = (row, side) => {
+          const sum = row.reduce((s, r) => s + r.area, 0);
+          const mx = Math.max(...row.map((r) => r.area)),
+            mn = Math.min(...row.map((r) => r.area));
+          const s2 = sum * sum,
+            side2 = side * side;
+          return Math.max((side2 * mx) / s2, s2 / (side2 * mn));
+        };
+        while (remaining.length) {
+          const vertical = rect.w >= rect.h;
+          const side = Math.min(rect.w, rect.h);
+          let row = [];
+          while (remaining.length) {
+            const cand = row.concat(remaining[0]);
+            if (row.length === 0 || worst(cand, side) <= worst(row, side))
+              row.push(remaining.shift());
+            else break;
+          }
+          const sum = row.reduce((s, r) => s + r.area, 0);
+          const thick = sum / side;
+          let off = 0;
+          if (vertical) {
+            row.forEach((r) => {
+              const h = r.area / thick;
+              out.push({ ...r, x: rect.x, y: rect.y + off, w: thick, h });
+              off += h;
+            });
+            rect = {
+              x: rect.x + thick,
+              y: rect.y,
+              w: rect.w - thick,
+              h: rect.h,
+            };
+          } else {
+            row.forEach((r) => {
+              const w = r.area / thick;
+              out.push({ ...r, x: rect.x + off, y: rect.y, w, h: thick });
+              off += w;
+            });
+            rect = {
+              x: rect.x,
+              y: rect.y + thick,
+              w: rect.w,
+              h: rect.h - thick,
+            };
+          }
+        }
+        return out;
+      }
+
+      /* ---- render treemap ---- */
+      const container = document.getElementById("treemap");
+      let currentLayer = "ai";
+      let selected = null;
+      function render() {
+        const W = container.clientWidth,
+          H = container.clientHeight;
+        if (!W || !H) return;
+        const laid = squarify(
+          DATA.map((d) => ({ ...d, value: d.emp })),
+          0,
+          0,
+          W,
+          H,
+        );
+        container.innerHTML = "";
+        laid.forEach((d) => {
+          const el = document.createElement("button");
+          el.className = "tile";
+          const c = colorFor(d, currentLayer);
+          el.style.background = c;
+          el.style.left = d.x + "px";
+          el.style.top = d.y + "px";
+          el.style.width = Math.max(0, d.w - 1) + "px";
+          el.style.height = Math.max(0, d.h - 1) + "px";
+          el.classList.add(luminance(c) > 0.55 ? "light" : "dark");
+          if (selected && selected.name === d.name) el.classList.add("sel");
+          el.setAttribute(
+            "aria-label",
+            `${d.name}. ${indianWords(d.emp)} workers. AI exposure ${d.ai} of 10. Resilience ${d.res.toFixed(1)} of 10.`,
+          );
+          if (d.w > 62 && d.h > 30) {
+            const nm = document.createElement("div");
+            nm.className = "t-name";
+            nm.textContent = d.name;
+            el.appendChild(nm);
+            if (d.w > 84 && d.h > 50) {
+              const v = document.createElement("div");
+              v.className = "t-val";
+              const extra =
+                currentLayer === "ai"
+                  ? "AI " + d.ai
+                  : currentLayer === "res"
+                    ? "Res " + d.res.toFixed(1)
+                    : currentLayer === "pay"
+                      ? fmtPay(d.pay)
+                      : currentLayer === "edu"
+                        ? d.edu
+                        : currentLayer === "growth"
+                          ? GROWTH_LABEL[d.growth]
+                          : d.sector;
+              v.textContent = `${indianShort(d.emp)} · ${extra}`;
+              el.appendChild(v);
+            }
+          }
+          el.addEventListener("click", () => {
+            selectJob(d.name);
+          });
+          container.appendChild(el);
+        });
+      }
+
+      /* ---- legend + hint ---- */
+      const LAYER_HINTS = {
+        ai: "<b>Colour = AI exposure.</b> Cool/green jobs are safest from AI for now; hot/red jobs are most likely to change. Notice how most of the map — all the big farming, construction and retail tiles — stays cool.",
+        res: "<b>Colour = future resilience</b> (AI-shielding + demand trend). Green jobs look steadiest over 5–10 years; red jobs face the most pressure. Remember: resilient from AI does not always mean well-paid.",
+        pay: "<b>Colour = typical monthly pay.</b> Brighter green means higher pay. Switch to AI exposure and back: the best-paid jobs are often the most AI-exposed.",
+        edu: "<b>Colour = the schooling most people in this job have.</b> Lighter purple means more years of education.",
+        growth:
+          "<b>Colour = is the job growing or shrinking?</b> A rough, directional call — not an official forecast.",
+        sector:
+          "<b>Colour = which part of the economy the job is in</b> (farming, IT, healthcare, and so on).",
+      };
+      function setLayerHint() {
+        document.getElementById("layerHint").innerHTML =
+          LAYER_HINTS[currentLayer];
+      }
+      function renderLegend() {
+        const box = document.getElementById("legend"),
+          title = document.getElementById("legendTitle");
+        const rampHTML = (stops, l, r, note) => {
+          const grad = stops.map((s) => `${s[1]} ${s[0] * 100}%`).join(",");
+          return `<div class="legend-bar" style="background:linear-gradient(90deg,${grad})"></div><div class="legend-scale"><span>${l}</span><span>${r}</span></div><div class="legend-note">${note}</div>`;
+        };
+        if (currentLayer === "ai") {
+          title.textContent = "AI exposure (0–10)";
+          box.innerHTML = rampHTML(
+            AI_STOPS,
+            "0 · safe",
+            "10 · exposed",
+            "Higher = more of the job's tasks are digital and can be done or sped up by AI. High means the job will <i>change</i>, not that it disappears.",
+          );
+        } else if (currentLayer === "res") {
+          title.textContent = "Future resilience (0–10)";
+          box.innerHTML = rampHTML(
+            RES_STOPS,
+            "0 · pressure",
+            "10 · steady",
+            "60% AI-shielding + 40% demand trend. Green jobs look steadiest over the next 5–10 years. A reasoning aid, not a forecast — and not a pay measure.",
+          );
+        } else if (currentLayer === "pay") {
+          title.textContent = "Median monthly pay";
+          box.innerHTML = rampHTML(
+            PAY_STOPS,
+            fmtPay(payMin),
+            fmtPay(payMax),
+            "Rough take-home per month. The highest-pay tiles tend to also be the highest AI-exposure tiles.",
+          );
+        } else if (currentLayer === "edu") {
+          title.textContent = "Typical education";
+          box.innerHTML = rampHTML(
+            EDU_STOPS,
+            "Below primary",
+            "Post-grad",
+            "The usual schooling for the job (not a strict requirement).",
+          );
+        } else if (currentLayer === "growth") {
+          title.textContent = "Growth outlook";
+          box.innerHTML =
+            `<div class="legend-cats">` +
+            Object.keys(GROWTH_COLORS)
+              .map(
+                (k) =>
+                  `<div class="row"><span class="sw" style="background:${GROWTH_COLORS[k]}"></span>${GROWTH_LABEL[k]}</div>`,
+              )
+              .join("") +
+            `</div><div class="legend-note">A directional judgement, not an official numeric projection.</div>`;
+        } else {
+          title.textContent = "Sector";
+          const secs = [...new Set(DATA.map((d) => d.sector))];
+          box.innerHTML =
+            `<div class="legend-cats">` +
+            secs
+              .map(
+                (s) =>
+                  `<div class="row"><span class="sw" style="background:${SECTOR_COLORS[s]}"></span>${s}</div>`,
+              )
+              .join("") +
+            `</div>`;
+        }
+      }
+
+      /* ---- detail ---- */
+      function renderDetail() {
+        const el = document.getElementById("detail");
+        if (!selected) {
+          el.innerHTML = `<h3>Selected job</h3><div class="empty">Tap or click any tile to see how many people do it, what it pays, the usual education, its outlook, its future-resilience score, and why it gets its AI-exposure score.</div>`;
+          return;
+        }
+        const d = selected;
+        const expoColor = rampColor(AI_STOPS, d.ai / 10);
+        const share = (
+          (d.emp / DATA.reduce((s, x) => s + x.emp, 0)) *
+          100
+        ).toFixed(1);
+        const g = GROUPS[d.grp];
+        el.innerHTML = `
+    <h3>Selected job</h3>
+    <div class="d-name">${d.name}</div>
+    <div class="d-sector">${d.sector}</div>
+    <div class="d-group" style="background:${g.color}1f;color:${g.color};border:1px solid ${g.color}55">
+      <span class="gdot" style="background:${g.color}"></span>${g.label}
+    </div>
+    <div class="d-metrics">
+      <div class="m"><div class="k">Workers</div><div class="v">${fullEmp(d.emp)}</div></div>
+      <div class="m"><div class="k">Share of jobs</div><div class="v">${share}%</div></div>
+      <div class="m"><div class="k">Median pay</div><div class="v">${fmtPay(d.pay)}/mo</div></div>
+      <div class="m"><div class="k">Education</div><div class="v" style="font-size:12px">${d.edu}</div></div>
+    </div>
+    <div class="d-meter">
+      <div class="lab"><span>AI exposure</span><span class="val">${d.ai}/10 · ${GROWTH_LABEL[d.growth]}</span></div>
+      <div class="bar"><i style="width:${d.ai * 10}%;background:${expoColor}"></i></div>
+    </div>
+    <div class="d-meter">
+      <div class="lab"><span>Future resilience</span><span class="val">${d.res.toFixed(1)}/10</span></div>
+      <div class="bar"><i style="width:${d.res * 10}%;background:${resColor(d.res)}"></i></div>
+    </div>
+    <div class="rationale"><b>Why this score:</b> ${d.note}</div>
+    ${d.local ? `<div class="local"><span class="lh">In India</span>${d.local}</div>` : ""}
+  `;
+      }
+
+      function selectJob(name) {
+        selected = DATA.find((d) => d.name === name) || null;
+        render();
+        renderDetail();
+        drawQuad();
+      }
+
+      /* ---- quadrant scatter chart (self-contained SVG) ---- */
+      const svgNS = "http://www.w3.org/2000/svg";
+      const quad = document.getElementById("quadChart");
+      const QW = 820,
+        QH = 520,
+        M = { l: 64, r: 22, t: 44, b: 56 };
+      const plotW = QW - M.l - M.r,
+        plotH = QH - M.t - M.b;
+      const xFor = (ai) => M.l + (ai / 10) * plotW; // AI exposure 0..10
+      const yFor = (g) => M.t + plotH - ((GROWTH_Y[g] + 0.5) / 4) * plotH; // growth band 0..3
+      const empMax = Math.max(...DATA.map((d) => d.emp));
+      const rFor = (emp) => 6 + Math.sqrt(emp / empMax) * 26;
+      function jitter(name) {
+        let h = 0;
+        for (let i = 0; i < name.length; i++)
+          h = (h * 31 + name.charCodeAt(i)) >>> 0;
+        return (h % 1000) / 1000 - 0.5;
+      }
+      function el(tag, attrs) {
+        const e = document.createElementNS(svgNS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        return e;
+      }
+      function drawQuad() {
+        quad.innerHTML = "";
+        // quadrant background split lines (x at exposure 5, y between stable & growing)
+        const xMid = xFor(5),
+          yMid = M.t + plotH * 0.5;
+        quad.appendChild(
+          el("line", {
+            x1: xMid,
+            y1: M.t,
+            x2: xMid,
+            y2: M.t + plotH,
+            class: "quad-grid",
+          }),
+        );
+        quad.appendChild(
+          el("line", {
+            x1: M.l,
+            y1: yMid,
+            x2: M.l + plotW,
+            y2: yMid,
+            class: "quad-grid",
+          }),
+        );
+        // axes
+        quad.appendChild(
+          el("line", {
+            x1: M.l,
+            y1: M.t + plotH,
+            x2: M.l + plotW,
+            y2: M.t + plotH,
+            class: "quad-axis",
+          }),
+        );
+        quad.appendChild(
+          el("line", {
+            x1: M.l,
+            y1: M.t,
+            x2: M.l,
+            y2: M.t + plotH,
+            class: "quad-axis",
+          }),
+        );
+        // quadrant labels
+        const qlab = (x, y, t, s) => {
+          const a = el("text", {
+            x,
+            y,
+            class: "quad-qlabel",
+            "text-anchor": "middle",
+          });
+          a.textContent = t;
+          quad.appendChild(a);
+          const b = el("text", {
+            x,
+            y: y + 14,
+            class: "quad-qsub",
+            "text-anchor": "middle",
+          });
+          b.textContent = s;
+          quad.appendChild(b);
+        };
+        qlab(
+          M.l + plotW * 0.25,
+          M.t + 16,
+          "SAFE & GROWING",
+          "Skilled trades, care, in-person",
+        );
+        qlab(
+          M.l + plotW * 0.75,
+          M.t + 16,
+          "CHANGING",
+          "Exposed but demand rising",
+        );
+        qlab(
+          M.l + plotW * 0.25,
+          M.t + plotH - 22,
+          "SAFE BUT SHRINKING",
+          "AI-shielded, demand falling",
+        );
+        qlab(
+          M.l + plotW * 0.75,
+          M.t + plotH - 22,
+          "UNDER PRESSURE",
+          "Exposed & flat/declining",
+        );
+        // x ticks
+        [0, 2, 4, 6, 8, 10].forEach((v) => {
+          const t = el("text", {
+            x: xFor(v),
+            y: M.t + plotH + 18,
+            class: "quad-tick",
+            "text-anchor": "middle",
+          });
+          t.textContent = v;
+          quad.appendChild(t);
+        });
+        const xl = el("text", {
+          x: M.l + plotW / 2,
+          y: QH - 14,
+          class: "quad-axislabel",
+          "text-anchor": "middle",
+        });
+        xl.textContent = "AI exposure  →  more exposed";
+        quad.appendChild(xl);
+        // y ticks (growth bands)
+        Object.keys(GROWTH_Y).forEach((g) => {
+          const t = el("text", {
+            x: M.l - 10,
+            y: yFor(g) + 3,
+            class: "quad-tick",
+            "text-anchor": "end",
+          });
+          t.textContent = GROWTH_LABEL[g];
+          quad.appendChild(t);
+        });
+        const yl = el("text", {
+          x: 16,
+          y: M.t + plotH / 2,
+          class: "quad-axislabel",
+          "text-anchor": "middle",
+          transform: `rotate(-90 16 ${M.t + plotH / 2})`,
+        });
+        yl.textContent = "Demand  →  growing";
+        quad.appendChild(yl);
+        // bubbles (largest first so small ones sit on top)
+        [...DATA]
+          .sort((a, b) => b.emp - a.emp)
+          .forEach((d) => {
+            const cx = xFor(d.ai) + jitter(d.name) * 14;
+            const cy =
+              yFor(d.growth) + jitter(d.name + "y") * ((plotH / 4) * 0.62);
+            const r = rFor(d.emp);
+            const c = el("circle", {
+              cx,
+              cy,
+              r,
+              class: "quad-dot",
+              fill: resColor(d.res),
+              "fill-opacity": selected && selected.name === d.name ? 1 : 0.82,
+              stroke:
+                selected && selected.name === d.name
+                  ? "#fff"
+                  : "rgba(10,14,18,.5)",
+              "stroke-width": selected && selected.name === d.name ? 2 : 1,
+            });
+            c.addEventListener("mouseenter", (e) => showTip(e, d));
+            c.addEventListener("mousemove", moveTip);
+            c.addEventListener("mouseleave", hideTip);
+            c.addEventListener("click", () => {
+              hideTip();
+              selectJob(d.name);
+              document
+                .getElementById("detail")
+                .scrollIntoView({ behavior: "smooth", block: "center" });
+            });
+            quad.appendChild(c);
+          });
+      }
+
+      /* ---- styled quadrant tooltip ---- */
+      const quadTip = document.getElementById("quadTip");
+      function showTip(e, d) {
+        const g = GROUPS[d.grp];
+        quadTip.style.borderLeftColor = g.color;
+        quadTip.innerHTML = `
+    <div class="tn">${d.name}</div>
+    <div class="ts">${d.sector}</div>
+    <div class="tr"><span class="k">Workers</span><span class="v">${indianWords(d.emp)}</span></div>
+    <div class="tr"><span class="k">AI exposure</span><span class="v">${d.ai}/10 · ${GROWTH_LABEL[d.growth]}</span></div>
+    <div class="tr"><span class="k">Future resilience</span><span class="v">${d.res.toFixed(1)}/10</span></div>
+    <span class="tgrp" style="background:${g.color}22;color:${g.color}">${g.label}</span>`;
+        quadTip.classList.add("show");
+        moveTip(e);
+      }
+      function moveTip(e) {
+        const pad = 16;
+        let x = e.clientX + pad,
+          y = e.clientY + pad;
+        const w = quadTip.offsetWidth,
+          h = quadTip.offsetHeight;
+        if (x + w > window.innerWidth - 8) x = e.clientX - w - pad;
+        if (y + h > window.innerHeight - 8) y = e.clientY - h - pad;
+        quadTip.style.left = Math.max(8, x) + "px";
+        quadTip.style.top = Math.max(8, y) + "px";
+      }
+      function hideTip() {
+        quadTip.classList.remove("show");
+      }
+
+      /* ---- summary stats ---- */
+      function renderStats() {
+        const totalEmp = DATA.reduce((s, d) => s + d.emp, 0);
+        const wAvg = DATA.reduce((s, d) => s + d.ai * d.emp, 0) / totalEmp;
+        const highShare =
+          (DATA.filter((d) => d.ai >= 7).reduce((s, d) => s + d.emp, 0) /
+            totalEmp) *
+          100;
+        const resSafeShare =
+          (DATA.filter((d) => d.res >= 7).reduce((s, d) => s + d.emp, 0) /
+            totalEmp) *
+          100;
+        document.getElementById("statStrip").innerHTML = `
+    <div class="stat"><div class="num">${(totalEmp / 10).toFixed(1)}<span class="u">cr</span></div><div class="lbl">Total workers shown (≈${totalEmp.toFixed(0)} million). Illustrative.</div></div>
+    <div class="stat"><div class="num">${wAvg.toFixed(1)}<span class="u">/10</span></div><div class="lbl">Average AI exposure, weighted by number of workers</div></div>
+    <div class="stat"><div class="num">${highShare.toFixed(0)}<span class="u">%</span></div><div class="lbl">of workers are in high-exposure (7+) jobs — the small "hot" slice</div></div>
+    <div class="stat"><div class="num">${resSafeShare.toFixed(0)}<span class="u">%</span></div><div class="lbl">are in high-resilience (7+) work that looks steady for now</div></div>
+  `;
+      }
+
+      /* ---- controls ---- */
+      document.getElementById("layerSeg").addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        currentLayer = btn.dataset.layer;
+        [...e.currentTarget.querySelectorAll("button")].forEach((b) =>
+          b.setAttribute("aria-pressed", b === btn),
+        );
+        render();
+        renderLegend();
+        setLayerHint();
+      });
+
+      /* ---- init ---- */
+      function boot() {
+        renderStats();
+        render();
+        renderLegend();
+        setLayerHint();
+        renderDetail();
+        drawQuad();
+      }
+      boot();
+      let rt;
+      const onResize = () => {
+        clearTimeout(rt);
+        rt = setTimeout(render, 80);
+      };
+      if (typeof ResizeObserver !== "undefined") {
+        new ResizeObserver(onResize).observe(container);
+      } else {
+        window.addEventListener("resize", onResize);
+      }
+    </script>
+  </body>
+</html>

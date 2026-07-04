@@ -4,7 +4,7 @@ slug: "multi-tenant-saas-lessons"
 date: "2026-05-22"
 category: "Engineering"
 excerpt: "What onboarding 10+ companies onto one invoice platform taught me about tenant isolation, RBAC, and the leaks hiding in caches, jobs, and sockets."
-coverImage: "https://picsum.photos/seed/multi-tenant-saas-lessons/1200/630"
+coverImage: "/images/blog/multi-tenant-saas-lessons/cover.jpg"
 readingTime: "6 min read"
 ---
 
@@ -53,6 +53,8 @@ export const db = basePrisma.$extends({
 ```
 
 The important property is the failure mode. A missing filter used to leak silently; now it throws loudly, usually in staging, with a stack trace pointing at the exact call site. I will take a crash over a leak every single time.
+
+![Architecture diagram: request flows through a guard and AsyncLocalStorage into a Prisma extension that injects tenantId, with cache keys, jobs, WebSocket rooms, and raw SQL flagged as surfaces that must carry the tenant themselves](/images/blog/multi-tenant-saas-lessons/one-enforcement-point.svg "One enforcement point in the data layer — and the four surfaces that must carry tenantId on their own.")
 
 ## RBAC Inside the Tenant Boundary
 

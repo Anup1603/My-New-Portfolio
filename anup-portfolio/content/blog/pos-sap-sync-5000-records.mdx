@@ -4,7 +4,7 @@ slug: "pos-sap-sync-5000-records"
 date: "2026-05-15"
 category: "Engineering"
 excerpt: "Moving 5,000+ records a day between retail POS systems and SAP taught me that validation, idempotency, and retries are what let you sleep at night."
-coverImage: "https://picsum.photos/seed/pos-sap-sync-5000-records/1200/630"
+coverImage: "/images/blog/pos-sap-sync-5000-records/cover.jpg"
 readingTime: "5 min read"
 ---
 
@@ -17,6 +17,8 @@ None of what follows is exotic. It is validation, idempotency, retries, and moni
 At 5,000+ records a day, rare events are weekly events. Dirty data was our biggest source of failures: free-text fields where structured codes should be, units that disagreed between the POS and SAP master data, missing tax codes on edge-case product categories. Then partial failures: a batch of two hundred records where three fail should not poison the other hundred and ninety-seven, but our first implementation treated the batch as one transaction and did exactly that. Then timeouts: the SAP side slowed down during end-of-day processing windows, which is exactly when our biggest batches arrived. And finally duplicate deliveries: the POS layer had its own retry behavior, so a network blip meant the same sale could reach us twice, minutes apart.
 
 The mental shift that mattered was to stop treating these as anomalies to be eliminated and start treating them as steady-state inputs to be designed for.
+
+![Pipeline diagram: POS records are normalized and validated, failures quarantine with reasons, valid records upsert idempotently and push to SAP with capped retries, and exhausted records land in a dead-letter workbench that supports safe replay](/images/blog/pos-sap-sync-5000-records/sync-pipeline.svg "The full pipeline: validate early, quarantine with reasons, retry only the transient, and make replay always safe.")
 
 ## The Validation Layer That Cut Failures by 40 Percent
 

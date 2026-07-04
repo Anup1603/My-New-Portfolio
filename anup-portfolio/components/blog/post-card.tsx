@@ -10,6 +10,7 @@ const categoryVariant = {
   "Tech News": "cyan",
   Startups: "violet",
   Engineering: "primary",
+  "Data Visualization": "success",
 } as const;
 
 export function categoryBadgeVariant(category: string) {

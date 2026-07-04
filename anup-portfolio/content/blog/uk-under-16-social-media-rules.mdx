@@ -4,8 +4,15 @@ slug: "uk-under-16-social-media-rules"
 date: "2026-06-12"
 category: "Tech News"
 excerpt: "The UK's strict new rules for under-16 social media use are a compliance earthquake. Here is what product teams and backend engineers should learn from it."
-coverImage: "https://picsum.photos/seed/uk-under-16-social-media-rules/1200/630"
+coverImage: "/images/blog/uk-under-16-social-media-rules/cover.jpg"
 readingTime: "5 min read"
+sources:
+  - title: "GOV.UK — Social media to be banned for under-16s in landmark government move"
+    url: "https://www.gov.uk/government/news/social-media-to-be-banned-for-under-16s-in-landmark-government-move-to-givekids-their-childhood-back"
+  - title: "GOV.UK — Fact sheet: New rules to protect children online"
+    url: "https://www.gov.uk/government/publications/fact-sheet-new-rules-to-protect-children-online/fact-sheet-new-rules-to-protect-children-online"
+  - title: "NPR — Britain will ban under-16s from social media apps, including TikTok and YouTube"
+    url: "https://www.npr.org/2026/06/15/nx-s1-5858644/britain-social-media-ban"
 ---
 
 The UK has passed new restrictions on social-media use for children under 16, and by most accounts they sit among the toughest rules of their kind anywhere in the world. The headlines frame this as a parenting story or a Big Tech story. I think it is equally an engineering story, and one that people who build products for a living should read carefully.
@@ -19,6 +26,8 @@ The first thing every engineer should appreciate is that verifying age on the in
 Each option carries a privacy trade-off that engineers will have to own. ID checks mean handling some of the most sensitive documents a person has. Facial estimation means biometric processing, with all the consent, accuracy, and bias questions that come with it. Carrier and bank signals mean deep third-party dependencies in your critical path. The emerging good practice is a separation of concerns: a dedicated verifier confirms the age attribute and passes your platform a signed assertion, so your own database never stores the underlying document. If you are designing such a system, the goal should be that a breach of your platform reveals that a user was verified, but nothing about how.
 
 That principle — store the claim, not the evidence — is one of the most useful ideas to steal from this whole regulatory wave.
+
+![Flow diagram: the user proves their age to a dedicated verifier which keeps the evidence and passes the platform only a signed 16-plus assertion](/images/blog/uk-under-16-social-media-rules/claim-not-evidence.svg "Store the claim, not the evidence: the verifier keeps the documents; your platform stores only a signed assertion.")
 
 ## Compliance Engineering Becomes a First-Class Discipline
 

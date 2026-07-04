@@ -1,0 +1,63 @@
+<svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Tenant isolation enforced once in the data layer, with every other tenant surface carrying the tenantId explicitly">
+  <defs>
+    <linearGradient id="oep-flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6d28d9"/><stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="560" fill="#111118"/>
+  <rect x="0.5" y="0.5" width="999" height="559" fill="none" stroke="#2a323c"/>
+
+  <text x="60" y="62" font-size="30" font-weight="bold" fill="#eaedf0">Isolation lives in one place — not a hundred</text>
+  <text x="60" y="94" font-size="16" fill="#8b96a3">Shared schema, tenantId on every row, scoping enforced at the lowest layer</text>
+
+  <!-- main flow -->
+  <g>
+    <rect x="60" y="150" width="160" height="70" rx="12" fill="#1a1a24" stroke="#2a323c"/>
+    <text x="140" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#eaedf0">Request</text>
+    <text x="140" y="202" text-anchor="middle" font-size="12" fill="#8b96a3">authenticated user</text>
+
+    <rect x="270" y="150" width="160" height="70" rx="12" fill="#1e1b3a" stroke="#8b5cf6"/>
+    <text x="350" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#c4b5fd">Guard</text>
+    <text x="350" y="202" text-anchor="middle" font-size="12" fill="#8b96a3">resolves tenant</text>
+
+    <rect x="480" y="150" width="200" height="70" rx="12" fill="#1e1b3a" stroke="#8b5cf6"/>
+    <text x="580" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#c4b5fd">AsyncLocalStorage</text>
+    <text x="580" y="202" text-anchor="middle" font-size="12" fill="#8b96a3">tenant context</text>
+
+    <rect x="730" y="150" width="210" height="70" rx="12" fill="#12303a" stroke="#22d3ee"/>
+    <text x="835" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#67e8f9">Prisma extension</text>
+    <text x="835" y="202" text-anchor="middle" font-size="12" fill="#8b96a3">injects tenantId — or throws</text>
+  </g>
+  <g stroke="#5e6975" stroke-width="2.5" fill="#5e6975">
+    <line x1="220" y1="185" x2="258" y2="185"/><path d="M252 179 L 264 185 L 252 191 Z"/>
+    <line x1="430" y1="185" x2="468" y2="185"/><path d="M462 179 L 474 185 L 462 191 Z"/>
+    <line x1="680" y1="185" x2="718" y2="185"/><path d="M712 179 L 724 185 L 712 191 Z"/>
+  </g>
+
+  <!-- DB -->
+  <g stroke="#67e8f9" stroke-width="2.5" fill="#67e8f9">
+    <line x1="835" y1="220" x2="835" y2="258"/><path d="M829 252 L 835 264 L 841 252 Z"/>
+  </g>
+  <rect x="620" y="268" width="320" height="66" rx="12" fill="url(#oep-flow)"/>
+  <text x="780" y="296" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffffff">PostgreSQL — shared schema</text>
+  <text x="780" y="320" text-anchor="middle" font-size="13" font-family="monospace" fill="#f1f5ff">WHERE tenantId = ctx.tenantId</text>
+
+  <!-- other tenant surfaces -->
+  <text x="60" y="392" font-size="13" font-weight="bold" letter-spacing="1.5" fill="#8b96a3">THE SURFACES THE EXTENSION CANNOT SEE — each must carry tenantId itself</text>
+  <g>
+    <rect x="60" y="410" width="205" height="58" rx="10" fill="#1a1a24" stroke="#f59e0b"/>
+    <text x="162" y="435" text-anchor="middle" font-size="14" font-weight="bold" fill="#fbbf24">Redis cache keys</text>
+    <text x="162" y="456" text-anchor="middle" font-size="12" fill="#8b96a3">tenant in every key</text>
+    <rect x="285" y="410" width="205" height="58" rx="10" fill="#1a1a24" stroke="#f59e0b"/>
+    <text x="387" y="435" text-anchor="middle" font-size="14" font-weight="bold" fill="#fbbf24">Background jobs</text>
+    <text x="387" y="456" text-anchor="middle" font-size="12" fill="#8b96a3">tenantId in payload</text>
+    <rect x="510" y="410" width="205" height="58" rx="10" fill="#1a1a24" stroke="#f59e0b"/>
+    <text x="612" y="435" text-anchor="middle" font-size="14" font-weight="bold" fill="#fbbf24">WebSocket rooms</text>
+    <text x="612" y="456" text-anchor="middle" font-size="12" fill="#8b96a3">auth before join</text>
+    <rect x="735" y="410" width="205" height="58" rx="10" fill="#1a1a24" stroke="#f59e0b"/>
+    <text x="837" y="435" text-anchor="middle" font-size="14" font-weight="bold" fill="#fbbf24">Raw SQL</text>
+    <text x="837" y="456" text-anchor="middle" font-size="12" fill="#8b96a3">explicit param + 2nd reviewer</text>
+  </g>
+
+  <text x="60" y="522" font-size="14" font-style="italic" fill="#8b96a3">A missing filter used to leak silently. Now it throws loudly — a crash beats a leak, every single time.</text>
+</svg>

@@ -4,17 +4,24 @@ slug: "together-ai-800m-series-c"
 date: "2026-07-01"
 category: "Startups"
 excerpt: "An $800M Series C for inference infrastructure says more about where AI value sits in 2026 than any model launch. A builder reads the fine print."
-coverImage: "https://picsum.photos/seed/together-ai-800m-series-c/1200/630"
+coverImage: "/images/blog/together-ai-800m-series-c/cover.jpg"
 readingTime: "6 min read"
+sources:
+  - title: "Together AI — Announcing our $800M Series C (official)"
+    url: "https://www.together.ai/blog/announcing-our-series-c"
+  - title: "Together AI Raises $800M at $8.3B Valuation (BusinessWire)"
+    url: "https://www.businesswire.com/news/home/20260701243402/en/Together-AI-Raises-$800-Million-at-$8.3-Billion-Valuation-to-Make-Frontier-AI-Accessible-to-All"
 ---
 
-I read funding announcements the way I read pull requests: skip the description, go straight to the diff. The diff this week is Together AI closing an $800M Series C led by Aramco Ventures. Strip away the press-release adjectives and what remains is a simple, slightly uncomfortable fact about mid-2026 — the biggest cheques in venture are not going to products. They are going to the machines that run other people's products.
+I read funding announcements the way I read pull requests: skip the description, go straight to the diff. The diff this week is Together AI closing an $800M Series C led by Aramco Ventures, at an $8.3B valuation. Strip away the press-release adjectives and what remains is a simple, slightly uncomfortable fact about mid-2026 — the biggest cheques in venture are not going to products. They are going to the machines that run other people's products.
 
 I build multi-tenant SaaS for a living — NestJS services, Next.js frontends, PostgreSQL, all running on GCP — and a growing part of my job is staring at inference line items on billing dashboards. So when an infrastructure company raises at this scale, I don't see hype. I see a bet on a cost curve I reconcile every month.
 
 ## Inference Is the Recurring Bill Nobody Can Cancel
 
 Training runs get the headlines, but inference pays the rent. A training run is a large, lumpy, one-time expense. Inference is different in kind: it is a permanent, per-request compute cost attached to every feature you ship. Every chat message, every autocomplete, every retrieval call, every step an agent takes — each one is metered compute, forever, for as long as the product exists.
+
+![Diagram contrasting a single one-time training cost with a rising series of recurring inference costs](/images/blog/together-ai-800m-series-c/training-vs-inference.svg "Training is a single spike. Inference is a per-request cost that recurs — and compounds as usage grows.")
 
 And the demand side compounds. AI features are being folded into ordinary software the same way every application quietly became a database application fifteen years ago. Once a capability moves from novelty to expectation, its usage curve stops depending on hype cycles. It depends on how much software exists — and more software gets written every day. Whoever sells inference capacity is selling into a market where the customer base grows even when sentiment sours.
 
@@ -24,7 +31,9 @@ That is the demand story an $800M cheque is underwriting. Not a model. Not an ap
 
 The picks-and-shovels thesis is the oldest cliché in venture, and it keeps working for a boring reason: the application layer is volatile, and the infrastructure layer taxes everyone's success. An investor cannot reliably pick which AI application wins its category. But every application that wins pays the compute layer. Together AI does not need any single customer to survive; it needs the aggregate to keep growing, and the aggregate is the entire software industry.
 
-The engineer in me insists on the caveat, though. Shovels are brutally capital-intensive. GPUs depreciate on a schedule that would make a taxi fleet owner wince. Hyperscalers sell the same commodity with deeper pockets, and price competition in inference is relentless — which is precisely what makes it useful to the rest of us and dangerous to the people providing it. That $800M is not a trophy. It is the entry fee for staying on a treadmill where most of the money converts directly into hardware, data-centre commitments, and power contracts. This is not software economics. It is infrastructure economics wearing a startup hoodie.
+![Diagram showing volatile application-layer startups, each winner paying down into a single wide inference-infrastructure layer](/images/blog/together-ai-800m-series-c/capital-stack.svg "You can't reliably pick the winning app — but every winner pays the compute layer underneath it.")
+
+The engineer in me insists on the caveat, though. Shovels are brutally capital-intensive. GPUs depreciate on a schedule that would make a taxi fleet owner wince. Hyperscalers sell the same commodity with deeper pockets, and price competition in inference is relentless — which is precisely what makes it useful to the rest of us and dangerous to the people providing it. That $800M is not a trophy. It is the entry fee for staying on a treadmill where most of the money converts directly into hardware, data-centre commitments, and power contracts. This is not software economics. It is infrastructure economics wearing a startup hoodie. Together AI signals as much itself: alongside the equity it lined up commitments for over 500 MW of compute and says it expects to grow its infrastructure footprint roughly 50-fold over the next five years. You do not raise and spend like that to ship an app — you raise like that to build a utility.
 
 ## When Sovereign Money Enters the Chat
 

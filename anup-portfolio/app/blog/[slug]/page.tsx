@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       {/* Body + sticky TOC */}
       <div className="mx-auto mt-12 grid max-w-4xl gap-12 lg:max-w-none lg:grid-cols-[minmax(0,1fr)_240px] lg:px-16">
-        <div className="prose prose-zinc mx-auto w-full max-w-3xl dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-a:text-primary prose-strong:text-foreground">
+        <div className="prose prose-zinc mx-auto w-full min-w-0 max-w-3xl dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-a:text-primary prose-strong:text-foreground">
           <MDXRemote
             source={content}
             components={mdxComponents}

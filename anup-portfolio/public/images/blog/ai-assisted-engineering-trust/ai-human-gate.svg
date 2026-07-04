@@ -1,0 +1,51 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="AI widens the search space; a human gate decides what ships">
+  <defs>
+    <linearGradient id="ahg-gate" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6d28d9"/><stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="520" fill="#111118"/>
+  <rect x="0.5" y="0.5" width="999" height="519" fill="none" stroke="#2a323c"/>
+
+  <text x="60" y="62" font-size="30" font-weight="bold" fill="#eaedf0">AI widens the search. A human owns the ship.</text>
+  <text x="60" y="94" font-size="16" fill="#8b96a3">The workflow: drafts on the left, accountability on the right</text>
+
+  <!-- AI outputs -->
+  <text x="60" y="146" font-size="13" font-weight="bold" letter-spacing="1.5" fill="#8b96a3">AI DRAFTS — wide, fast, unreliable</text>
+  <g>
+    <rect x="60" y="162" width="250" height="52" rx="10" fill="#1e1b3a" stroke="#8b5cf6"/>
+    <text x="185" y="194" text-anchor="middle" font-size="15" fill="#c4b5fd">Bug hypotheses</text>
+    <rect x="60" y="226" width="250" height="52" rx="10" fill="#1e1b3a" stroke="#8b5cf6"/>
+    <text x="185" y="258" text-anchor="middle" font-size="15" fill="#c4b5fd">Test case lists</text>
+    <rect x="60" y="290" width="250" height="52" rx="10" fill="#1e1b3a" stroke="#8b5cf6"/>
+    <text x="185" y="322" text-anchor="middle" font-size="15" fill="#c4b5fd">Doc first drafts</text>
+    <rect x="60" y="354" width="250" height="52" rx="10" fill="#1e1b3a" stroke="#8b5cf6"/>
+    <text x="185" y="386" text-anchor="middle" font-size="15" fill="#c4b5fd">Attack angles</text>
+  </g>
+
+  <!-- converging arrows -->
+  <g stroke="#5e6975" stroke-width="2" fill="none">
+    <path d="M310 188 C 380 188 380 250 440 262"/>
+    <path d="M310 252 C 370 252 380 258 440 268"/>
+    <path d="M310 316 C 370 316 380 286 440 276"/>
+    <path d="M310 380 C 380 380 380 296 440 282"/>
+  </g>
+
+  <!-- Human gate -->
+  <rect x="448" y="180" width="300" height="190" rx="16" fill="url(#ahg-gate)"/>
+  <text x="598" y="222" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">THE HUMAN GATE</text>
+  <text x="598" y="256" text-anchor="middle" font-size="14" fill="#f1f5ff">1 · compiler (typed stack)</text>
+  <text x="598" y="284" text-anchor="middle" font-size="14" fill="#f1f5ff">2 · tests with real assertions</text>
+  <text x="598" y="312" text-anchor="middle" font-size="14" fill="#f1f5ff">3 · line-by-line review</text>
+  <text x="598" y="340" text-anchor="middle" font-size="14" fill="#f1f5ff">4 · can I defend every line?</text>
+
+  <!-- ship -->
+  <g stroke="#34d399" stroke-width="2.5" fill="#34d399">
+    <line x1="748" y1="275" x2="836" y2="275"/>
+    <path d="M830 269 L 842 275 L 830 281 Z"/>
+  </g>
+  <rect x="848" y="243" width="92" height="64" rx="12" fill="#0d2b22" stroke="#34d399"/>
+  <text x="894" y="281" text-anchor="middle" font-size="16" font-weight="bold" fill="#34d399">SHIP</text>
+
+  <text x="60" y="470" font-size="14" font-style="italic" fill="#8b96a3">Rule one: if it merges under your name, you can explain every line. "The model wrote it" is not a sentence in any postmortem.</text>
+</svg>

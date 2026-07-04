@@ -33,7 +33,12 @@ export interface Heading {
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
-export const categories = ["Tech News", "Startups", "Engineering"] as const;
+export const categories = [
+  "Tech News",
+  "Startups",
+  "Engineering",
+  "Data Visualization",
+] as const;
 
 function parseFile(filename: string): Post {
   const raw = fs.readFileSync(path.join(BLOG_DIR, filename), "utf-8");

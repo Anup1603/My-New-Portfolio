@@ -1,0 +1,52 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="Hybrid AI architecture: small models run on-device, frontier reasoning stays in the cloud, and the backend orchestrates between them">
+  <defs>
+    <linearGradient id="lcs-orch" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6d28d9"/><stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="520" fill="#111118"/>
+  <rect x="0.5" y="0.5" width="999" height="519" fill="none" stroke="#2a323c"/>
+
+  <text x="60" y="62" font-size="30" font-weight="bold" fill="#eaedf0">When the hardware floor rises, AI architecture splits</text>
+  <text x="60" y="94" font-size="16" fill="#8b96a3">The backend's new job: decide where each piece of compute runs</text>
+
+  <!-- Device -->
+  <rect x="60" y="150" width="330" height="240" rx="16" fill="#1e1b3a" stroke="#8b5cf6"/>
+  <text x="225" y="188" text-anchor="middle" font-size="18" font-weight="bold" fill="#c4b5fd">ON-DEVICE</text>
+  <text x="225" y="212" text-anchor="middle" font-size="13" fill="#8b96a3">2027-class MacBook / iPad silicon</text>
+  <g font-size="14" fill="#eaedf0" text-anchor="middle">
+    <text x="225" y="248">summarization · classification</text>
+    <text x="225" y="276">autocomplete · on-device search</text>
+    <text x="225" y="304">sensitive data stays local</text>
+    <text x="225" y="332">zero network round trip</text>
+  </g>
+  <text x="225" y="368" text-anchor="middle" font-size="13" font-style="italic" fill="#8b96a3">fast · private · offline-capable</text>
+
+  <!-- Cloud -->
+  <rect x="610" y="150" width="330" height="240" rx="16" fill="#12303a" stroke="#22d3ee"/>
+  <text x="775" y="188" text-anchor="middle" font-size="18" font-weight="bold" fill="#67e8f9">CLOUD</text>
+  <text x="775" y="212" text-anchor="middle" font-size="13" fill="#8b96a3">hosted frontier models</text>
+  <g font-size="14" fill="#eaedf0" text-anchor="middle">
+    <text x="775" y="248">heavy multi-step reasoning</text>
+    <text x="775" y="276">large context · tool use</text>
+    <text x="775" y="304">fleet-wide learning</text>
+    <text x="775" y="332">escalation target</text>
+  </g>
+  <text x="775" y="368" text-anchor="middle" font-size="13" font-style="italic" fill="#8b96a3">powerful · metered · shared</text>
+
+  <!-- Orchestrator -->
+  <rect x="420" y="222" width="160" height="96" rx="14" fill="url(#lcs-orch)"/>
+  <text x="500" y="262" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">ORCHESTRATOR</text>
+  <text x="500" y="286" text-anchor="middle" font-size="12" fill="#f1f5ff">route · escalate</text>
+  <text x="500" y="304" text-anchor="middle" font-size="12" fill="#f1f5ff">sync state</text>
+
+  <!-- arrows both ways -->
+  <g stroke="#5e6975" stroke-width="2.5" fill="#5e6975">
+    <line x1="390" y1="252" x2="414" y2="252"/><path d="M408 246 L 420 252 L 408 258 Z"/>
+    <line x1="420" y1="290" x2="396" y2="290"/><path d="M402 284 L 390 290 L 402 296 Z"/>
+    <line x1="580" y1="252" x2="604" y2="252"/><path d="M598 246 L 610 252 L 598 258 Z"/>
+    <line x1="610" y1="290" x2="586" y2="290"/><path d="M592 284 L 580 290 L 592 296 Z"/>
+  </g>
+
+  <text x="60" y="452" font-size="14" font-style="italic" fill="#8b96a3">Structure the inference layer behind an interface now — an escape hatch today saves a rewrite when local models are good enough.</text>
+</svg>

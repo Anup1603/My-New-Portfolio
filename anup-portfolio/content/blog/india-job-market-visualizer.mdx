@@ -1,0 +1,91 @@
+---
+title: "Mapping India's Job Market: What 63.7 Crore Workers Actually Do — and How Much AI Touches Them"
+slug: "india-job-market-visualizer"
+date: "2026-07-04"
+category: "Data Visualization"
+excerpt: "An interactive treemap of who actually works in India — about 63.7 crore people across 54 kinds of jobs — recoloured by how much today's AI can touch each one. The surprise: most of the map stays cool."
+coverImage: "/images/blog/india-job-market-visualizer/cover.jpg"
+readingTime: "4 min read"
+sources:
+  - title: "Andrej Karpathy — US job market visualizer (the inspiration)"
+    url: "https://karpathy.ai/jobs"
+  - title: "Periodic Labour Force Survey (PLFS), MoSPI / NSO"
+    url: "https://www.mospi.gov.in"
+  - title: "National Classification of Occupations (NCO-2015), Ministry of Labour & Employment"
+    url: "https://labour.gov.in"
+  - title: "Census of India"
+    url: "https://censusindia.gov.in"
+---
+
+India has about **63.7 crore workers** doing wildly different things — farming, delivery, retail, software, care work. This map puts them all on one screen: sized by how many people do each job, and coloured by how much today's AI can actually touch them.
+
+## How to read it
+
+- **Each tile is one job** — cultivators, construction labourers, software developers, insurance agents.
+- **Bigger tile = more people** do that job. Farming is huge; software is tiny.
+- **Colour = the layer you pick** — AI exposure, pay, education, growth, or sector.
+
+Tap any tile for its details, and use the buttons above the map to switch layers.
+
+## Try it yourself
+
+<MapEmbed
+  src="/tools/india-job-market-visualizer.html"
+  title="India Job Market Visualizer — interactive treemap of India's workforce"
+/>
+
+## The big finding: India runs "cool"
+
+- Weighted by how many people do each job, India's average AI exposure is **~2.9 out of 10**. The US map this is based on sits at **~4.9**.
+- Only **~5%** of Indian workers are in high-exposure (7+) jobs — data entry, accounts, call centres, bank clerks. In the US, it's **~42%**.
+- **Two-thirds** are in low-exposure, hands-on or informal work.
+
+This isn't about India being "behind." It's a different labour structure — most people work with their hands or face-to-face, out of a chatbot's reach.
+
+## What "AI exposure" means
+
+A **0–10 estimate** of how much of a job today's AI could do or speed up. Desk-and-screen work scores high; physical or in-person work — farming, nursing, driving, repairs — scores low.
+
+One caveat worth keeping in mind: a high score means a job will likely **change, not vanish**. Bank clerks lived through exactly this with core banking and UPI — the work changed shape; the people didn't disappear.
+
+## Why India mirrors the US
+
+- **Farming** employs ~**24 crore** people — about the population of Pakistan. It sets the temperature of the whole map.
+- **IT** employs ~**30 lakh** developers — huge in rupees and exports, but a small tile in headcount.
+- **~84%** of non-farm work is informal — no contract, little digital surface for AI to grab onto.
+
+Where the US concentrates people at screens, India concentrates them in fields, on roads, in kirana stores, and in people's homes.
+
+## The six layers
+
+- **AI exposure** — what AI can do or speed up today.
+- **Future resilience** — which jobs look steady over the next 5–10 years.
+- **Median pay** — often, the best-paid office jobs are the most exposed.
+- **Education** — the schooling people in the job usually have.
+- **Growth outlook** — whether the job is expanding or shrinking.
+- **Sector** — agriculture, IT, healthcare, transport, and so on.
+
+## "Future resilience", in one formula
+
+Exposure alone doesn't tell you if a job is a good place to be — farm labour is safe from AI but shrinking and low-paid. So resilience combines two things: how shielded a job is, and whether demand is growing.
+
+```js
+// resilience = 60% "how shielded from AI" + 40% "demand trend"
+function resilience(job) {
+  const aiShielding = 10 - job.ai; // low exposure -> high shielding
+  const demandTrend = GROWTH_SCORE[job.growth]; // e.g. declining=2, growing=8
+  return 0.6 * aiShielding + 0.4 * demandTrend;
+}
+```
+
+It's a lens for thinking, not a forecast.
+
+## One honest caveat
+
+The per-tile numbers are **careful estimates, not official statistics**. What's anchored to real data is the **proportions** — tile sizes match government survey shares (~43% of workers in farming, ~84% of non-farm work informal, ~63.7 crore total). So trust the _shape_ of the map, not any single tile's number.
+
+## The takeaway
+
+India's AI conversation is usually imported from richer countries where most people already work at screens. India's reality is different — most of the country works with its hands or with other people, and most of that work stays cool on the AI map, for now.
+
+Open the map, pick a layer, and click around. The proportions tend to surprise people — which is rather the point.

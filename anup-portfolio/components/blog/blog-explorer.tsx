@@ -12,13 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { PostCard, categoryBadgeVariant } from "@/components/blog/post-card";
 import { StaggerContainer, StaggerItem } from "@/components/motion";
 
-const allCategories = ["Tech News", "Startups", "Engineering"];
+const allCategories = [
+  "Tech News",
+  "Startups",
+  "Engineering",
+  "Data Visualization",
+];
 
 function FeaturedPost({ post }: { post: PostMeta }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group mb-14 block">
       <article className="grid overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:border-primary/30 hover:shadow-xl hover:shadow-indigo-500/5 lg:grid-cols-2">
-        <div className="relative aspect-[1200/630] lg:aspect-auto lg:min-h-80">
+        <div className="relative aspect-1200/630 lg:aspect-auto lg:min-h-80">
           <Image
             src={post.coverImage}
             alt=""

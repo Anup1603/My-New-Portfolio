@@ -1,0 +1,33 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="A staged robot demo versus the adversarial reality of a rented robot working a shopping mall">
+  <rect width="1000" height="520" fill="#111118"/>
+  <rect x="0.5" y="0.5" width="999" height="519" fill="none" stroke="#2a323c"/>
+
+  <text x="60" y="62" font-size="30" font-weight="bold" fill="#eaedf0">The demo is curated. The rental floor is adversarial.</text>
+  <text x="60" y="94" font-size="16" fill="#8b96a3">Every engineer knows this gap — robotics is now crossing it in public</text>
+
+  <!-- Demo column -->
+  <rect x="60" y="140" width="420" height="300" rx="16" fill="#1e1b3a" stroke="#8b5cf6"/>
+  <text x="270" y="180" text-anchor="middle" font-size="18" font-weight="bold" fill="#c4b5fd">THE DEMO STAGE</text>
+  <g font-size="14.5" fill="#eaedf0">
+    <text x="100" y="222">✓  charged batteries</text>
+    <text x="100" y="256">✓  rehearsed route, prepared floor</text>
+    <text x="100" y="290">✓  tuned lighting for the cameras</text>
+    <text x="100" y="324">✓  technician just off-camera</text>
+    <text x="100" y="358">✓  one flawless three-minute run</text>
+  </g>
+  <text x="270" y="410" text-anchor="middle" font-size="13" font-style="italic" fill="#8b96a3">a benchmark, aced</text>
+
+  <!-- Production column -->
+  <rect x="520" y="140" width="420" height="300" rx="16" fill="#2b1f0d" stroke="#f59e0b"/>
+  <text x="730" y="180" text-anchor="middle" font-size="18" font-weight="bold" fill="#fbbf24">THE RENTAL FLOOR</text>
+  <g font-size="14.5" fill="#eaedf0">
+    <text x="560" y="222">⚠  uneven floors, glare, dropped Wi-Fi</text>
+    <text x="560" y="256">⚠  children grabbing its arms</text>
+    <text x="560" y="290">⚠  batteries draining below spec</text>
+    <text x="560" y="324">⚠  human handler shipped with the robot</text>
+    <text x="560" y="358">⚠  eight hours, paid by contract</text>
+  </g>
+  <text x="730" y="410" text-anchor="middle" font-size="13" font-style="italic" fill="#8b96a3">production traffic, no rollback button</text>
+
+  <text x="60" y="482" font-size="14" font-style="italic" fill="#8b96a3">Capability arrives years before dependability — and dependability is what actually gets paid for.</text>
+</svg>

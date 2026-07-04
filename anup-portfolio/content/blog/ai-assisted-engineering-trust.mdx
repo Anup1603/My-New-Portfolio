@@ -4,7 +4,7 @@ slug: "ai-assisted-engineering-trust"
 date: "2026-05-08"
 category: "Engineering"
 excerpt: "I use ChatGPT, Claude, and custom agents daily, but nothing ships without human review. My rules, my workflow, and the failure modes that shaped them."
-coverImage: "https://picsum.photos/seed/ai-assisted-engineering-trust/1200/630"
+coverImage: "/images/blog/ai-assisted-engineering-trust/cover.jpg"
 readingTime: "5 min read"
 ---
 
@@ -17,6 +17,8 @@ Here is the workflow I actually run, the rules I follow, and the failures that m
 Five places, in descending order of value for me. Debugging: pasting a sanitized stack trace and a suspect function into a model is the fastest rubber duck I have ever had — it is wrong maybe a third of the time, but wrong in ways that sharpen my own hypothesis. Code review pre-pass: before a human reviews my PR, an agent flags the mechanical stuff — unhandled promise rejections, missing null checks, inconsistent error shapes — so human review time goes to design instead. Documentation: first drafts of runbooks and API docs, which I then correct with the details only someone who operates the system would know. Test generation: breadth, not depth — more on that below. And security edge-case analysis: asking a model to attack my assumptions about an endpoint reliably surfaces two or three cases I had not written down.
 
 The common thread is that AI widens my search space. It almost never hands me the finished answer, and treating it as if it does is exactly where the trouble starts.
+
+![Workflow diagram: AI drafts of bug hypotheses, tests, docs, and attack angles converge into a human gate of compiler, tests, and review before anything ships](/images/blog/ai-assisted-engineering-trust/ai-human-gate.svg "The whole workflow in one picture: AI widens the search space; the human gate decides what ships.")
 
 ## The Rules for Anything That Ships
 

@@ -1,0 +1,54 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif" role="img" aria-label="The Associate exam tests breadth across many GCP topics; the Professional exam tests depth in one domain">
+  <defs>
+    <linearGradient id="bvd-v" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="bvd-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#0e7490"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="520" fill="#111118"/>
+  <rect x="0.5" y="0.5" width="999" height="519" fill="none" stroke="#2a323c"/>
+
+  <text x="60" y="62" font-size="30" font-weight="bold" fill="#eaedf0">Associate is a breadth exam. Professional is a depth exam.</text>
+  <text x="60" y="94" font-size="16" fill="#8b96a3">Same platform, two different shapes of knowledge</text>
+
+  <!-- Associate: wide shallow row -->
+  <text x="60" y="150" font-size="14" font-weight="bold" letter-spacing="1.5" fill="#c4b5fd">ASSOCIATE CLOUD ENGINEER — wide and shallow</text>
+  <g fill="url(#bvd-v)">
+    <rect x="60" y="168" width="136" height="64" rx="8"/>
+    <rect x="208" y="168" width="136" height="64" rx="8"/>
+    <rect x="356" y="168" width="136" height="64" rx="8"/>
+    <rect x="504" y="168" width="136" height="64" rx="8"/>
+    <rect x="652" y="168" width="136" height="64" rx="8"/>
+    <rect x="800" y="168" width="136" height="64" rx="8"/>
+  </g>
+  <g font-size="13.5" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    <text x="128" y="205">IAM</text>
+    <text x="276" y="205">VPC basics</text>
+    <text x="424" y="205">Compute options</text>
+    <text x="572" y="205">gcloud fluency</text>
+    <text x="720" y="205">Deployment</text>
+    <text x="868" y="205">Monitoring</text>
+  </g>
+  <text x="60" y="262" font-size="13" font-style="italic" fill="#8b96a3">The real skill: elimination — four plausible answers, one that fits the stated constraints.</text>
+
+  <!-- Professional: narrow deep column -->
+  <text x="60" y="316" font-size="14" font-weight="bold" letter-spacing="1.5" fill="#67e8f9">PROFESSIONAL CLOUD DATABASE ENGINEER — narrow and deep</text>
+  <g fill="url(#bvd-c)">
+    <rect x="60" y="334" width="290" height="40" rx="8"/>
+    <rect x="60" y="382" width="290" height="40" rx="8"/>
+    <rect x="60" y="430" width="290" height="40" rx="8"/>
+  </g>
+  <g font-size="13.5" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    <text x="205" y="359">Cloud SQL vs AlloyDB vs Spanner</text>
+    <text x="205" y="407">HA, failover &amp; migrations</text>
+    <text x="205" y="455">Connections, backup &amp; recovery</text>
+  </g>
+
+  <rect x="400" y="334" width="540" height="136" rx="12" fill="#1a1a24" stroke="#2a323c"/>
+  <text x="424" y="368" font-size="14.5" font-weight="bold" fill="#eaedf0">It assumes you have operated databases.</text>
+  <text x="424" y="396" font-size="13.5" fill="#8b96a3">"I would have failed it as a fresh graduate; passing it after a year of</text>
+  <text x="424" y="418" font-size="13.5" fill="#8b96a3">production work felt less like the exam checking my knowledge</text>
+  <text x="424" y="440" font-size="13.5" fill="#8b96a3">and more like it checking my scars."</text>
+</svg>
