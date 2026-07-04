@@ -72,8 +72,9 @@ export function Navbar() {
           <ThemeToggle />
           <a
             href={site.resumeUrl}
-            download
-            aria-label="Download resume"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View resume"
             className="inline-flex items-center gap-2 rounded-full border border-border px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground sm:px-4"
           >
             <FileDown className="size-4" aria-hidden />

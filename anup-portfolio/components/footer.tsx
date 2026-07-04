@@ -62,10 +62,11 @@ export function Footer() {
             <li>
               <a
                 href={site.resumeUrl}
-                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
-                Download Resume
+                View Resume
               </a>
             </li>
           </ul>
@@ -173,8 +174,18 @@ export function Footer() {
 
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-center text-xs text-muted-foreground sm:flex-row sm:text-left sm:text-sm">
-          <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
-          <p>Crafted with Next.js, Tailwind CSS &amp; Framer Motion.</p>
+          <p>© {new Date().getFullYear()} All rights reserved.</p>
+          <p>
+            Developed & designed by{" "}
+            <a
+              href="https://www.linkedin.com/in/anupkumarshaw/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground font-semibold transition-colors hover:text-primary"
+            >
+              {site.name}💖
+            </a>
+          </p>
         </div>
       </div>
     </footer>

@@ -23,7 +23,13 @@ export const site = {
   phoneHref: "tel:+918482022122",
   location: "Howrah, West Bengal, India",
   availability: "Open to opportunities",
-  resumeUrl: "/resume.pdf",
+  // Google Drive resume — opens in Drive's viewer (view + download in one
+  // place, and updatable without redeploying). The `download` attribute is
+  // ignored cross-origin, so links to this open in a new tab instead.
+  resumeUrl:
+    "https://drive.google.com/file/d/1vN0IrtpXDipUH_f5mUZdg8qW5E1CSYYb/view?usp=drive_link",
+  // Local fallback copy in /public — not currently linked, but kept in sync.
+  resumeLocalUrl: "/resume.pdf",
   // Real portrait (café photo). The illustrated fallback lives at
   // /images/avatar.svg if a stylized look is ever wanted instead.
   profileImage: "/images/profile.jpg",
