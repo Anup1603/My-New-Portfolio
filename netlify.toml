@@ -1,0 +1,15 @@
+# Netlify configuration for the portfolio.
+# The Next.js app lives in the anup-portfolio/ subdirectory, so `base` points
+# there; all other paths are relative to it. Netlify auto-installs the Next.js
+# runtime, which handles SSR, the /api/contact route, and next/image.
+[build]
+  base = "anup-portfolio"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 requires Node 20+.
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
