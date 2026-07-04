@@ -1,0 +1,79 @@
+---
+title: "Designing Multi-Tenant SaaS: Lessons from Onboarding 10+ Enterprise Clients"
+slug: "multi-tenant-saas-lessons"
+date: "2026-05-22"
+category: "Engineering"
+excerpt: "What onboarding 10+ companies onto one invoice platform taught me about tenant isolation, RBAC, and the leaks hiding in caches, jobs, and sockets."
+coverImage: "https://picsum.photos/seed/multi-tenant-saas-lessons/1200/630"
+readingTime: "6 min read"
+---
+
+When we signed the first client onto the invoice generation platform I was building at Anocloud, multi-tenancy was a bullet point on an architecture slide. Ten-plus client companies later, it is the thing I think about before every schema change, every cache key, and every background job. Nothing sharpens your respect for tenant isolation like knowing that one sloppy query could show one company's invoices to another company's accountant.
+
+This is an honest write-up of what we chose, how we enforced it, and the mistakes that taught me the most. The stack is NestJS, Prisma, and PostgreSQL, with GST-compliant PDF generation and real-time WebSocket updates layered on top. Every one of those layers, it turned out, is a tenancy concern.
+
+## Shared Schema or Schema-per-Tenant
+
+The first real decision was where isolation lives. Schema-per-tenant gives you hard boundaries: each company gets its own PostgreSQL schema, and a bug in your query layer cannot cross it. It also gives you per-tenant backups and restores, which enterprise clients love hearing about. The cost is operational: every Prisma migration has to run once per schema, connection pooling fragments, and observability multiplies. For a small team, that overhead is not hypothetical — it is every deploy, forever.
+
+We went with a shared schema and a tenantId column on every tenant-owned table, with composite indexes that lead with tenantId. The reasoning was scale-honest: we were targeting tens of tenants, not tens of thousands, and I wanted one migration path, one connection pool, and one set of dashboards. The trade-off is that isolation becomes the application's job. So the next decision was making sure the application could not forget.
+
+## Making Isolation Impossible to Forget
+
+The first version relied on discipline: every service method accepted a tenantId and remembered to include it in the where clause. That approach survives exactly as long as your least-caffeinated code review. The fix was moving scoping to the lowest layer we control. A NestJS guard resolves the tenant from the authenticated user and stashes it in AsyncLocalStorage; a Prisma client extension then refuses to touch tenant-owned models without that context.
+
+```ts
+import { AsyncLocalStorage } from 'node:async_hooks';
+
+export const tenantContext = new AsyncLocalStorage<{ tenantId: string }>();
+
+const TENANT_MODELS = new Set(['Invoice', 'Customer', 'LineItem', 'Payment']);
+
+export const db = basePrisma.$extends({
+  query: {
+    $allModels: {
+      async $allOperations({ model, operation, args, query }) {
+        if (model && TENANT_MODELS.has(model)) {
+          const store = tenantContext.getStore();
+          if (!store?.tenantId) {
+            throw new Error(`No tenant context for ${model}.${operation}`);
+          }
+          if ('where' in args) {
+            args.where = { AND: [args.where ?? {}, { tenantId: store.tenantId }] };
+          }
+          if ('data' in args && operation === 'create') {
+            args.data = { ...args.data, tenantId: store.tenantId };
+          }
+        }
+        return query(args);
+      },
+    },
+  },
+});
+```
+
+The important property is the failure mode. A missing filter used to leak silently; now it throws loudly, usually in staging, with a stack trace pointing at the exact call site. I will take a crash over a leak every single time.
+
+## RBAC Inside the Tenant Boundary
+
+Role-based access control in a multi-tenant system is two-dimensional: what a user can do, and where they can do it. An admin of tenant A must be nobody in tenant B. We modelled roles as grants scoped to a tenant, so permission checks always compose with tenant scoping instead of replacing it. Guards evaluate both dimensions; services never do inline role comparisons. Sensitive operations — changing billing details, exporting data — additionally require OTP verification, because a compromised session should not be enough to walk out with a company's invoice history.
+
+The rule I follow now: keep the permission model boring. Roles map to permissions, permissions are checked in one guard layer, and nothing else in the codebase gets an opinion about authorization.
+
+## Three Mistakes That Nearly Bit Us
+
+First, leaky raw queries. The Prisma extension scopes model operations, but our reporting endpoints used raw SQL for aggregates, and raw SQL walks straight past the extension. One review caught a monthly revenue query missing its tenant filter before it shipped. Raw queries now require an explicit tenant parameter and a second reviewer.
+
+Second, cross-tenant caching. We cached invoice statistics in Redis under a key that did not include the tenant. With one tenant in the dev environment, everything looked perfect. With two tenants in staging, tenant B saw tenant A's numbers for about four minutes. Every environment now seeds at least two tenants, because a single-tenant environment is physically incapable of showing you this class of bug.
+
+Third, background jobs. PDF generation and email dispatch run in workers, outside any request, so there is no ambient tenant context to inherit. Job payloads must carry the tenantId explicitly, and the worker enters tenant context before its first database call. We learned this when a numbering job processed invoices in creation order across all tenants — nothing leaked, but per-tenant invoice sequences are a legal requirement, not a nicety.
+
+## PDFs, WebSockets, and Onboarding Friction
+
+GST-compliant invoicing made tenancy concrete in ways I did not expect. Each company has its own GSTIN, its own invoice number series that must be sequential and gap-free, and its own place-of-supply logic. Sequence generation has to be atomic per tenant, or two concurrent invoices grab the same number. WebSocket updates have the same shape: rooms are named per tenant, and the gateway authenticates a socket before it joins a room, because joining a room is an authorization decision dressed up as string concatenation.
+
+Onboarding taught the softer lessons. The first three clients were onboarded through hand-edited seed scripts, and every one of them surfaced a new assumption baked into our data model — invoice prefixes, financial year boundaries, rounding conventions. By the fifth client we had a scripted provisioning flow and an onboarding checklist, and onboarding time dropped from days to hours. Build the provisioning flow early; it pays for itself by the third client.
+
+## The Takeaway
+
+Shared-schema multi-tenancy is a fine choice for a small team, but only if isolation is enforced structurally, in one place, rather than by convention in a hundred places. Caches, background jobs, PDFs, and sockets are all tenant surfaces, and each will leak independently if you let it. And always run at least two tenants in every environment — a system that has never seen a second tenant has never had its isolation tested.

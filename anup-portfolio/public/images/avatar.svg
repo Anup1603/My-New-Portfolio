@@ -1,0 +1,92 @@
+<svg viewBox="0 0 480 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated avatar of Anup Kumar Shaw">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="55%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#0e7490"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="38%" r="60%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.55"/>
+      <stop offset="60%" stop-color="#8b5cf6" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shirt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c68642"/>
+      <stop offset="100%" stop-color="#a96a35"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#bae6fd" stop-opacity="0.10"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="480" height="600" fill="url(#bg)"/>
+  <circle cx="240" cy="230" r="260" fill="url(#glow)"/>
+  <circle cx="70" cy="90" r="90" fill="#22d3ee" opacity="0.10"/>
+  <circle cx="420" cy="480" r="120" fill="#a78bfa" opacity="0.12"/>
+  <circle cx="425" cy="95" r="6" fill="#e879f9" opacity="0.5"/>
+  <circle cx="55" cy="330" r="4" fill="#22d3ee" opacity="0.6"/>
+  <circle cx="395" cy="215" r="3.5" fill="#fbbf24" opacity="0.55"/>
+
+  <!-- Body / navy shirt -->
+  <path d="M240 402 C 168 402 118 448 102 512 L 92 600 L 388 600 L 378 512 C 362 448 312 402 240 402 Z" fill="url(#shirt)"/>
+  <!-- Shirt shading -->
+  <path d="M240 402 C 200 402 168 418 146 444 C 176 430 205 424 240 424 C 275 424 304 430 334 444 C 312 418 280 402 240 402 Z" fill="#0f172a" opacity="0.35"/>
+  <!-- Collar -->
+  <path d="M203 405 L 240 452 L 216 470 L 188 424 Z" fill="#1d4ed8"/>
+  <path d="M277 405 L 240 452 L 264 470 L 292 424 Z" fill="#1d4ed8"/>
+  <!-- Button placket -->
+  <rect x="235" y="452" width="10" height="148" rx="5" fill="#0f172a" opacity="0.3"/>
+  <circle cx="240" cy="486" r="4" fill="#93c5fd" opacity="0.8"/>
+  <circle cx="240" cy="524" r="4" fill="#93c5fd" opacity="0.8"/>
+  <circle cx="240" cy="562" r="4" fill="#93c5fd" opacity="0.8"/>
+
+  <!-- Neck -->
+  <path d="M212 348 L 212 412 C 212 428 268 428 268 412 L 268 348 Z" fill="url(#skin)"/>
+  <path d="M212 356 C 220 372 260 372 268 356 L 268 348 L 212 348 Z" fill="#8a5527" opacity="0.55"/>
+
+  <!-- Ears -->
+  <ellipse cx="151" cy="266" rx="16" ry="24" fill="url(#skin)"/>
+  <ellipse cx="329" cy="266" rx="16" ry="24" fill="url(#skin)"/>
+  <path d="M147 260 C 152 262 154 268 151 274" stroke="#8a5527" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M333 260 C 328 262 326 268 329 274" stroke="#8a5527" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Face -->
+  <path d="M240 128 C 186 128 158 170 158 232 C 158 300 190 368 240 368 C 290 368 322 300 322 232 C 322 170 294 128 240 128 Z" fill="url(#skin)"/>
+
+  <!-- Beard & moustache (light stubble) -->
+  <path d="M175 282 C 178 330 204 368 240 368 C 276 368 302 330 305 282 C 300 322 288 344 264 352 L 264 342 C 264 334 216 334 216 342 L 216 352 C 192 344 180 322 175 282 Z" fill="#2f2115" opacity="0.5"/>
+  <path d="M214 312 C 222 306 232 304 240 304 C 248 304 258 306 266 312 C 262 300 250 296 240 296 C 230 296 218 300 214 312 Z" fill="#2f2115" opacity="0.6"/>
+  <!-- Mouth -->
+  <path d="M220 330 C 232 340 248 340 260 330" stroke="#7c3a1d" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M240 240 C 237 258 233 270 228 278 C 234 284 246 284 252 278 C 247 270 243 258 240 240 Z" fill="#8a5527" opacity="0.6"/>
+
+  <!-- Hair -->
+  <path d="M158 240 C 150 168 172 108 240 104 C 310 108 330 168 322 240 C 318 208 310 190 300 180 C 304 164 300 152 292 142 C 288 154 282 160 276 164 C 276 150 270 138 258 130 C 258 142 252 150 244 154 C 236 142 222 136 204 138 C 210 146 212 154 210 162 C 192 166 178 180 174 200 C 168 212 162 224 158 240 Z" fill="#181210"/>
+  <path d="M204 138 C 190 132 180 132 168 140 C 178 142 186 146 190 152 Z" fill="#181210"/>
+  <!-- Hair shine -->
+  <path d="M206 122 C 222 114 250 112 268 120" stroke="#3f2f28" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Eyebrows -->
+  <path d="M182 218 C 192 210 210 209 222 214" stroke="#181210" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M258 214 C 270 209 288 210 298 218" stroke="#181210" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+  <!-- Glasses -->
+  <rect x="170" y="226" width="64" height="50" rx="12" fill="url(#lens)" stroke="#4c3f8f" stroke-width="6"/>
+  <rect x="246" y="226" width="64" height="50" rx="12" fill="url(#lens)" stroke="#4c3f8f" stroke-width="6"/>
+  <path d="M234 244 C 238 240 242 240 246 244" stroke="#4c3f8f" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M170 244 L 155 240 M 310 244 L 325 240" stroke="#4c3f8f" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Eyes -->
+  <circle cx="202" cy="251" r="8" fill="#241a12"/>
+  <circle cx="205" cy="248" r="2.5" fill="#f8fafc" opacity="0.9"/>
+  <circle cx="278" cy="251" r="8" fill="#241a12"/>
+  <circle cx="281" cy="248" r="2.5" fill="#f8fafc" opacity="0.9"/>
+</svg>

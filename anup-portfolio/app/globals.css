@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Obsidian Aurora design tokens                                       */
+/* Light mode (toggle)                                                 */
+/* ------------------------------------------------------------------ */
+:root {
+  --background: #fafaf9;
+  --card: #ffffff;
+  --elevated: #f4f4f5;
+  --border-hairline: rgba(10, 10, 15, 0.08);
+  --foreground: #0a0a0f;
+  --muted-foreground: #52525b;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --accent-cyan: #0891b2;
+  --accent-violet: #7c3aed;
+  --success: #059669;
+
+  /* sugar-high syntax tokens */
+  --sh-class: #7c3aed;
+  --sh-identifier: #0a0a0f;
+  --sh-sign: #52525b;
+  --sh-property: #4f46e5;
+  --sh-entity: #0891b2;
+  --sh-jsxliterals: #7c3aed;
+  --sh-string: #059669;
+  --sh-keyword: #db2777;
+  --sh-comment: #71717a;
+}
+
+/* Dark mode (default) */
+.dark {
+  --background: #0a0a0f;
+  --card: #12121a;
+  --elevated: #1a1a24;
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --foreground: #fafafa;
+  --muted-foreground: #a1a1aa;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --accent-cyan: #22d3ee;
+  --accent-violet: #a78bfa;
+  --success: #34d399;
+
+  --sh-class: #a78bfa;
+  --sh-identifier: #fafafa;
+  --sh-sign: #a1a1aa;
+  --sh-property: #818cf8;
+  --sh-entity: #22d3ee;
+  --sh-jsxliterals: #a78bfa;
+  --sh-string: #34d399;
+  --sh-keyword: #f472b6;
+  --sh-comment: #71717a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border-hairline);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-violet: var(--accent-violet);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 30%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Aurora gradient — reserved for hero mesh, primary CTA, eyebrows     */
+/* ------------------------------------------------------------------ */
+.aurora-gradient {
+  background-image: linear-gradient(135deg, #6366f1 0%, #a78bfa 50%, #22d3ee 100%);
+}
+
+.aurora-text {
+  background-image: linear-gradient(135deg, #6366f1 0%, #a78bfa 50%, #22d3ee 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/* Film-grain overlay — dark mode only, ~3% opacity                    */
+/* ------------------------------------------------------------------ */
+.dark body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Subtle dot grid used behind the hero */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--border-hairline) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Thin scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--elevated) transparent;
+}

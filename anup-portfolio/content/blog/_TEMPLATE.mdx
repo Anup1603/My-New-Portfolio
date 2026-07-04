@@ -1,0 +1,45 @@
+---
+title: "Your Post Title Here"
+slug: "your-post-slug-here"
+date: "2026-07-04"
+category: "Engineering"
+excerpt: "One or two sentences shown on the blog cards and in search results / social previews."
+coverImage: "/images/blog/your-post-slug-here/cover.jpg"
+readingTime: "5 min read"
+sources:
+  - title: "Name of the article, doc, or paper you referenced"
+    url: "https://example.com/the-source"
+  - title: "Another source (delete this list entirely if you have none)"
+    url: "https://example.com/another-source"
+---
+
+Your opening paragraph. Hook the reader — why does this topic matter?
+
+## A Section Heading (shows up in the table of contents)
+
+Regular **markdown** works everywhere: _italics_, [links](https://example.com),
+`inline code`, lists, and quotes:
+
+> A blockquote for a key takeaway or a quote from a source.
+
+### A Sub-Section (also in the table of contents)
+
+Add an image (put the file in `public/images/blog/<your-post-slug>/`).
+The text in quotes becomes the caption:
+
+![Dashboard screenshot](/images/blog/your-post-slug-here/screenshot.png "Optional caption shown under the image")
+
+## Code Examples
+
+Fenced code blocks get syntax highlighting, a language label, and a copy button:
+
+```ts
+export function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+
+## Wrapping Up
+
+Close with the takeaway. The `sources` you listed in the frontmatter render
+automatically as a numbered "Sources & References" section right below this.

@@ -1,0 +1,74 @@
+---
+title: "AI-Assisted Engineering Without Breaking Trust: My Production Workflow"
+slug: "ai-assisted-engineering-trust"
+date: "2026-05-08"
+category: "Engineering"
+excerpt: "I use ChatGPT, Claude, and custom agents daily, but nothing ships without human review. My rules, my workflow, and the failure modes that shaped them."
+coverImage: "https://picsum.photos/seed/ai-assisted-engineering-trust/1200/630"
+readingTime: "5 min read"
+---
+
+I use AI tools every working day — ChatGPT, Claude, Codex, and a few custom agents wired into our workflows at Anocloud. I also do not fully trust any of them, and that combination is not a contradiction; it is the whole point of this post. Nearly two years into production work, the question I get most from other early-career engineers is not whether to use AI, but how to use it without shipping something you cannot stand behind.
+
+Here is the workflow I actually run, the rules I follow, and the failures that made me adopt them.
+
+## Where AI Actually Earns Its Keep
+
+Five places, in descending order of value for me. Debugging: pasting a sanitized stack trace and a suspect function into a model is the fastest rubber duck I have ever had — it is wrong maybe a third of the time, but wrong in ways that sharpen my own hypothesis. Code review pre-pass: before a human reviews my PR, an agent flags the mechanical stuff — unhandled promise rejections, missing null checks, inconsistent error shapes — so human review time goes to design instead. Documentation: first drafts of runbooks and API docs, which I then correct with the details only someone who operates the system would know. Test generation: breadth, not depth — more on that below. And security edge-case analysis: asking a model to attack my assumptions about an endpoint reliably surfaces two or three cases I had not written down.
+
+The common thread is that AI widens my search space. It almost never hands me the finished answer, and treating it as if it does is exactly where the trouble starts.
+
+## The Rules for Anything That Ships
+
+Rule one: AI drafts, human owns. If code merges under my name, I can explain every line of it. There is no postmortem in which the sentence starts with the model wrote it.
+
+Rule two: never paste secrets or client data. Stack traces get sanitized, sample payloads get synthesized, connection strings never leave the machine. In a client-services context this is non-negotiable — the data is not mine to share.
+
+Rule three: AI-generated tests get an assertion review. A generated test that passes for the wrong reason is worse than no test, because it manufactures false confidence.
+
+Rule four: use AI to widen the search space on security, never to certify it. A model saying an endpoint looks safe means nothing; a model listing ten attack angles I can then verify by hand means a lot.
+
+Rule five: anything that touches production goes through the same manual review it would get if no AI were involved. The tooling changed; the bar did not.
+
+## A Test Skeleton, Drafted Then Hardened
+
+A concrete example of rule three. I asked an agent for edge-case tests on our tenant guard. It produced eight cases; I kept five, deleted two that were really testing the mocking framework, and rewrote most of the assertions.
+
+```ts
+// The AI drafted the case list; the assertions below are mine.
+describe('TenantGuard', () => {
+  it('rejects a token whose tenantId differs from the route tenant', async () => {
+    const token = signTestJwt({ sub: 'user-1', tenantId: 'tenant-a' });
+
+    await request(app.getHttpServer())
+      .get('/tenants/tenant-b/invoices')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(403); // not just "not 200" — the draft would have passed on a 500
+  });
+
+  it('rejects an expired token even for the correct tenant', async () => {
+    const token = signTestJwt({ sub: 'user-1', tenantId: 'tenant-a', expiresIn: '-1h' });
+
+    await request(app.getHttpServer())
+      .get('/tenants/tenant-a/invoices')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401);
+  });
+});
+```
+
+The draft's version of that first test asserted only that the response was not 200 — which would happily pass on a 500 thrown by a completely broken guard. That is the signature failure mode of generated tests: plausible shape, hollow assertions. But the case list itself was genuinely useful; the expired-token-for-the-correct-tenant case was one I had not thought to write down.
+
+## The Failure Modes I Keep Hitting
+
+Confident wrong answers are the headline risk, but the subtler one is API hallucination. Models regularly hand me Prisma options or NestJS decorators that look perfectly idiomatic and simply do not exist, or existed two major versions ago. The TypeScript compiler catches most of these, which is one more reason I am glad we work in a typed stack — the compiler is effectively my first reviewer of AI output. The hallucinations the compiler cannot catch are behavioral: code that compiles but is wrong about ordering guarantees or transaction semantics. Those only fall to tests and to actually reading the documentation.
+
+The other failure mode is mine, not the model's: the temptation to accept a fluent answer because it is late and I am tired. These models are agreeable; if I lead with a wrong hypothesis, they will happily decorate it with supporting detail. I have learned to ask for the strongest case against my own theory before I ask for a fix.
+
+## Trust Is the Deliverable
+
+Clients do not buy code; they buy accountability for code. Inside the team, AI use is normal and undisguised — we share prompts the way we share shell aliases — but the review standard never relaxed to make room for it. The speed gains are real: documentation that used to slip now gets written, test coverage is broader, debugging sessions are shorter. What did not change is that a human signs off on everything that ships, and that human can defend it line by line.
+
+## The Takeaway
+
+AI has made me faster at almost every part of my job except the part that matters most: deciding what is correct and safe to ship. Use it to widen your search space — for bugs, tests, docs, and attack angles — and keep the ownership boundary absolute. The moment the model said so becomes a justification, you have traded trust for speed, and that trade always comes due.

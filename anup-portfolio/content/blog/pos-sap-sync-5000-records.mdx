@@ -1,0 +1,71 @@
+---
+title: "POS ↔ SAP Sync at 5,000+ Records a Day: Validation, Retries, and Sleep"
+slug: "pos-sap-sync-5000-records"
+date: "2026-05-15"
+category: "Engineering"
+excerpt: "Moving 5,000+ records a day between retail POS systems and SAP taught me that validation, idempotency, and retries are what let you sleep at night."
+coverImage: "https://picsum.photos/seed/pos-sap-sync-5000-records/1200/630"
+readingTime: "5 min read"
+---
+
+The first big system I owned at Anocloud was a synchronization pipeline between a retail client's POS systems and SAP — billing, invoices, warehouse movements, inventory, and sales, adding up to more than 5,000 records a day. For the first few weeks, my morning ritual was opening the logs to see what had died overnight. This post is about the work that ended that ritual.
+
+None of what follows is exotic. It is validation, idempotency, retries, and monitoring — the four boring pillars of every reliable data pipeline. What I hope to add is the texture of actually operating one: what fails, how often, and which fixes bought the most sleep.
+
+## Why Sync Pipelines Fail
+
+At 5,000+ records a day, rare events are weekly events. Dirty data was our biggest source of failures: free-text fields where structured codes should be, units that disagreed between the POS and SAP master data, missing tax codes on edge-case product categories. Then partial failures: a batch of two hundred records where three fail should not poison the other hundred and ninety-seven, but our first implementation treated the batch as one transaction and did exactly that. Then timeouts: the SAP side slowed down during end-of-day processing windows, which is exactly when our biggest batches arrived. And finally duplicate deliveries: the POS layer had its own retry behavior, so a network blip meant the same sale could reach us twice, minutes apart.
+
+The mental shift that mattered was to stop treating these as anomalies to be eliminated and start treating them as steady-state inputs to be designed for.
+
+## The Validation Layer That Cut Failures by 40 Percent
+
+The single highest-leverage change was rejecting bad records before they got anywhere near SAP. Every incoming record goes through normalization first — trimming, unit conversion, tax-code mapping against master data — and then a validation pass that produces machine-readable failure reasons. Records that fail are quarantined, not forwarded.
+
+```ts
+async ingest(record: PosSaleDto): Promise<void> {
+  const normalized = normalizeSale(record); // units, codes, trims
+  const issues = validateSale(normalized);  // returns ValidationIssue[]
+
+  if (issues.length > 0) {
+    await this.prisma.quarantinedRecord.create({
+      data: {
+        sourceKey: normalized.sourceKey,
+        payload: record as object,
+        issueCodes: issues.map((i) => i.code),
+      },
+    });
+    return; // never forward known-bad data downstream
+  }
+
+  await this.prisma.syncRecord.upsert({
+    where: { sourceKey: normalized.sourceKey }, // idempotent by design
+    create: { ...normalized, status: 'PENDING' },
+    update: { ...normalized, retryCount: 0, status: 'PENDING' },
+  });
+}
+```
+
+This cut our sync failures by roughly 40 percent, but the number undersells it. The real win was that failures turned into visible, categorized rejections with reasons attached. Instead of debugging a cryptic SAP error at the far end of the pipeline, we could tell the client that a specific store kept sending sales against a retired product code — and the fix happened at the source, once, instead of in our error logs forever.
+
+## Retries, Backoff, and the Dead-Letter Table
+
+Retrying everything is as bad as retrying nothing. We classify errors first: timeouts and connection resets are transient and get retried; validation rejections from SAP and referential failures are permanent and do not. Transient failures retry with exponential backoff plus jitter, so a struggling SAP endpoint is not hammered by a synchronized thundering herd, and the attempt count is capped.
+
+After the cap, records land in a dead-letter table with the full payload, every error message, and the attempt history. The important design decision: the dead-letter table is a workbench, not a graveyard. The admin portal renders it as a queue with a re-run action, so once a root cause is fixed, operations can replay the affected records without anyone touching the database by hand.
+
+## Idempotency Keys, the Boring Hero
+
+Every record carries a deterministic source key derived from its origin — store, document number, and business date. Every write, ours and downstream, is an upsert keyed on it. That one decision absorbs an entire class of problems: the POS retrying its delivery, our own pipeline retrying after a timeout that had actually succeeded, and manual replays from the dead-letter queue. The rule I hold now: a sync pipeline must be safe to run twice, because it will run twice, usually at the worst possible moment.
+
+Idempotency also changed how we recover from incidents. When a batch is in doubt, the answer is simply to re-send it. There is no forensic reconstruction of which records made it through, because replay is always safe.
+
+## Watching It From the Admin Portal
+
+The last piece was making the pipeline observable by people who are not me. We built a sync monitoring module into the NestJS admin portal: per-entity counters for synced, pending, quarantined, and dead-lettered records, failure rates over time, and drill-downs into individual record histories. Threshold alerts fire when quarantine rates spike, which almost always means something changed upstream — a new product category, a POS software update — rather than a bug in our code.
+
+The honest success metric is personal. I stopped checking the logs at 7 a.m. Transient failures heal themselves, bad data quarantines itself with a reason attached, and the system asks for a human only for the residue that genuinely needs one. That is what reliability feels like from the inside: quieter mornings.
+
+## The Takeaway
+
+At 5,000 records a day, every rare failure mode becomes routine, so design for dirty data, duplicates, timeouts, and partial failures as steady-state inputs rather than surprises. Validate early and quarantine with reasons, retry only what is transient, and make every write idempotent so that replay is always safe. The goal is not a pipeline that never fails — it is one that fails visibly, recovers automatically, and lets you sleep.
